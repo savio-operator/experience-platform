@@ -4,7 +4,7 @@ from uuid import UUID
 import pytest
 from fastapi.testclient import TestClient
 
-from app.config import get_log_level
+from app.core.config import get_log_level
 from app.main import app
 
 

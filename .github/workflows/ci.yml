@@ -11,6 +11,10 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      APP_ENV: test
+      POSTGRES_DB: experience_test
+      COMPOSE_PROJECT_NAME: experience-ci
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
@@ -26,6 +30,25 @@ jobs:
         run: |
           uv run --frozen ruff check .
           uv run --frozen ruff format --check .
+      - name: Generate disposable test credentials
+        run: |
+          python - <<'PY'
+          import os, secrets
+          password = secrets.token_hex(24)
+          key = secrets.token_hex(32)
+          print(f"::add-mask::{password}")
+          print(f"::add-mask::{key}")
+          with open(os.environ["GITHUB_ENV"], "a") as env:
+              env.write(f"POSTGRES_PASSWORD={password}\nOTP_HASH_KEY={key}\n")
+              env.write(f"DATABASE_URL=postgresql+psycopg://experience:{password}@127.0.0.1:55432/experience_test\n")
+          PY
+      - name: Start disposable PostgreSQL
+        run: docker compose --env-file /dev/null -f infra/compose.yml up -d --wait --wait-timeout 60 db
+      - name: Apply and check migrations
+        working-directory: backend
+        run: |
+          uv run --frozen alembic upgrade head
+          uv run --frozen alembic check
       - name: Tests
         working-directory: backend
         run: uv run --frozen pytest
@@ -35,6 +58,6 @@ jobs:
         run: |
           docker compose --env-file /dev/null -f infra/compose.yml up -d --wait --wait-timeout 60
           python -c "import json, urllib.request; r = urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5); assert r.status == 200 and json.load(r) == {'status': 'ok'}"
-      - name: Stop container
+      - name: Stop disposable containers
         if: always()
-        run: docker compose --env-file /dev/null -f infra/compose.yml down
+        run: docker compose --env-file /dev/null -f infra/compose.yml down --volumes

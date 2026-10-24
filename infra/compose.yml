@@ -7,3 +7,27 @@ services:
       - "127.0.0.1:8000:8000"
     environment:
       LOG_LEVEL: INFO
+      APP_ENV: ${APP_ENV:?Set APP_ENV to local or test}
+      DATABASE_URL: postgresql+psycopg://experience:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-experience_local}
+      OTP_HASH_KEY: ${OTP_HASH_KEY:?Set OTP_HASH_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: experience
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-experience_local}
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U experience -d $$POSTGRES_DB"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  postgres_data:

@@ -10,8 +10,10 @@ WORKDIR /app
 RUN useradd --create-home --uid 10001 backend
 COPY --from=dependencies /app/.venv /app/.venv
 COPY backend/app ./app
+COPY backend/alembic.ini ./
+COPY backend/migrations ./migrations
 USER backend
 EXPOSE 8000
 HEALTHCHECK --interval=5s --timeout=3s --start-period=5s --retries=5 \
     CMD ["/app/.venv/bin/python", "-c", "import json, urllib.request; r = urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2); assert r.status == 200 and json.load(r) == {'status': 'ok'}"]
-CMD ["/app/.venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
+CMD ["/app/.venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log", "--no-proxy-headers"]
