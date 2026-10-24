@@ -321,3 +321,60 @@ This minimal version offers single-service plans, not multi-service combinations
 No live AI, vendor connection, price discovery, payment or cloud work is enabled.
 
 Step 6: Done when: a request returns options built only from verified inventory.
+
+## Step 7: booking state machine (payments deferred)
+
+Apply migration `0005` explicitly. `POST /bookings` accepts `slot_id`, UUID
+`idempotency_key`, `kind`, `quantity`, `budget_paise`, `expected_total_paise`,
+timezone-aware `expires_at`, and explicit structured `requirements`. The expected
+amount is a customer acceptance check, never the pricing authority. Inventory,
+capacity, offer freshness, hard requirements, budget, margin and total are checked
+again under the inventory lock. The requested deadline must fit all relevant
+verification/release windows; no arbitrary hold duration is inferred.
+
+Booking, component, price snapshot, hold and audit creation are one transaction.
+Keys are scoped to the authenticated customer: identical retries return the same
+booking, including terminal states; changed payloads return 409. Initial booking
+and component state is VENDOR_CONFIRMATION_PENDING. This step supports one component
+per booking, matching Step 6's single-service options. Later lifecycle/payment states
+are not exposed as arbitrary update endpoints.
+
+`GET /bookings/{id}` allows the owner or ops; other customers see 404. Customer
+responses omit costs, margins, evidence references and other customers' identifiers.
+Creation has limits of 15/user/minute and 30/IP/minute plus shared session limits.
+
+Ops-only `POST /ops/bookings/{id}/confirm` requires `vendor_confirmation_id`: a UUID
+reference to the actual supporting vendor confirmation retained by ops. The component
+records that reference, the confirming ops user and server timestamp. A reference
+is an ops attestation, not automated validation of vendor communications. Never
+supply synthetic references outside tests. Identical confirmations are idempotent;
+conflicting evidence or terminal-state transitions return 409. Database checks and
+a deferred constraint trigger prevent CONFIRMED without confirmed components and
+recorded evidence. All state transitions and hold changes write atomic audit events.
+
+Ops-only `POST /ops/bookings/{id}/reject` accepts `{}` and moves a pending booking
+to FAILED/REJECTED, releasing capacity. Confirmation converts the hold into durable
+CONFIRMED capacity; it cannot expire into sellable stock or be released through the
+generic hold endpoint. Inventory remains capacity-based (HELD while units are
+reserved), not globally confirmed for an entire multi-unit slot. Bookings and
+components are separate from inventory state. Payment status is NOT_INTEGRATED:
+confirmation records vendor acceptance only, never payment, fulfillment or a refund.
+
+Pending bookings past their deadline project FAILED/EXPIRED on reads. A late
+confirmation persists failure and returns 409. Run one expiry batch (up to 100) from
+`backend/` with the existing explicit local/test environment:
+
+```sh
+uv run --frozen python -m app.jobs.expire_bookings
+```
+
+The job safely retries, locks slots before transitions, releases expired reservations
+and audits with the reserved all-zero UUID system actor (not a user identity).
+Scheduling is external and not installed in this step. Time-expired holds stop
+consuming capacity even before the job runs. Confirmed reservations are excluded.
+Downgrading migration 0005 is blocked while confirmed reservations exist, preventing
+old inventory code from ignoring their capacity. Historical audit vocabulary is
+preserved on downgrade. No payment, notification, live supplier or cloud integration
+is enabled. Tests use synthetic evidence and disposable PostgreSQL only.
+
+Step 7: Done when: "confirmed" is unreachable without vendor confirmation.

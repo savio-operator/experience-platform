@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from sqlalchemy import func, insert, select, update
+from sqlalchemy import and_, func, insert, or_, select, update
 
 from app.modules.audit import service as audit
 from app.modules.catalogue.models import services
@@ -33,8 +33,10 @@ def active_quantity(connection, slot_id, now):
     return connection.scalar(
         select(func.coalesce(func.sum(holds.c.quantity), 0)).where(
             holds.c.slot_id == slot_id,
-            holds.c.state == "ACTIVE",
-            holds.c.expires_at > now,
+            or_(
+                holds.c.state == "CONFIRMED",
+                and_(holds.c.state == "ACTIVE", holds.c.expires_at > now),
+            ),
         )
     )
 
@@ -169,7 +171,8 @@ def set_availability(engine, actor_id, slot_id, state, verified_until):
                 raise ValueError("Invalid verification window")
             last_expiry = connection.scalar(
                 select(func.max(holds.c.expires_at)).where(
-                    holds.c.slot_id == slot_id, holds.c.state == "ACTIVE"
+                    holds.c.slot_id == slot_id,
+                    holds.c.state.in_(["ACTIVE", "CONFIRMED"]),
                 )
             )
             if last_expiry is not None and verified_until < last_expiry:
@@ -201,52 +204,56 @@ def set_availability(engine, actor_id, slot_id, state, verified_until):
 
 def create_hold(engine, actor_id, slot_id, values):
     with engine.begin() as connection:
-        slot = lock_slot(connection, slot_id)
-        now = connection.scalar(select(func.clock_timestamp()))
-        quantity = reconcile(connection, actor_id, slot, now)
-        existing = (
-            connection.execute(
-                select(holds).where(
-                    holds.c.slot_id == slot_id,
-                    holds.c.idempotency_key == values["idempotency_key"],
-                )
+        return create_hold_in_transaction(connection, actor_id, slot_id, values)
+
+
+def create_hold_in_transaction(connection, actor_id, slot_id, values):
+    slot = lock_slot(connection, slot_id)
+    now = connection.scalar(select(func.clock_timestamp()))
+    quantity = reconcile(connection, actor_id, slot, now)
+    existing = (
+        connection.execute(
+            select(holds).where(
+                holds.c.slot_id == slot_id,
+                holds.c.idempotency_key == values["idempotency_key"],
             )
-            .mappings()
-            .first()
         )
-        if existing:
-            if existing["created_by"] != actor_id or any(
-                existing[k] != v for k, v in values.items()
-            ):
-                raise ValueError("Idempotency key conflicts with the original request")
-            return dict(existing)
-        if slot["state"] not in {"AVAILABLE_VERIFIED", "HELD"}:
-            raise ValueError("Slot availability is not verified and current")
-        if (
-            not now
-            < values["expires_at"]
-            <= min(slot["release_at"], slot["verified_until"])
+        .mappings()
+        .first()
+    )
+    if existing:
+        if existing["created_by"] != actor_id or any(
+            existing[k] != v for k, v in values.items()
         ):
-            raise ValueError("Hold exceeds the verified release window")
-        if values["quantity"] > slot["capacity"] - quantity:
-            raise ValueError("Insufficient available capacity")
-        row = (
-            connection.execute(
-                insert(holds)
-                .values(
-                    id=uuid4(),
-                    slot_id=slot_id,
-                    created_by=actor_id,
-                    **values,
-                )
-                .returning(holds)
+            raise ValueError("Idempotency key conflicts with the original request")
+        return dict(existing)
+    if slot["state"] not in {"AVAILABLE_VERIFIED", "HELD"}:
+        raise ValueError("Slot availability is not verified and current")
+    if (
+        not now
+        < values["expires_at"]
+        <= min(slot["release_at"], slot["verified_until"])
+    ):
+        raise ValueError("Hold exceeds the verified release window")
+    if values["quantity"] > slot["capacity"] - quantity:
+        raise ValueError("Insufficient available capacity")
+    row = (
+        connection.execute(
+            insert(holds)
+            .values(
+                id=uuid4(),
+                slot_id=slot_id,
+                created_by=actor_id,
+                **values,
             )
-            .mappings()
-            .one()
+            .returning(holds)
         )
-        audit.record(connection, actor_id, "hold", row["id"], "created", values)
-        set_state(connection, actor_id, slot, "HELD")
-        return dict(row)
+        .mappings()
+        .one()
+    )
+    audit.record(connection, actor_id, "hold", row["id"], "created", values)
+    set_state(connection, actor_id, slot, "HELD")
+    return dict(row)
 
 
 def release_hold(engine, actor_id, hold_id):
@@ -258,6 +265,17 @@ def release_hold(engine, actor_id, hold_id):
             raise LookupError("Hold not found")
         slot = lock_slot(connection, slot_id)
         now = connection.scalar(select(func.clock_timestamp()))
+        from app.modules.bookings.models import booking_components
+
+        if (
+            connection.scalar(
+                select(booking_components.c.id).where(
+                    booking_components.c.hold_id == hold_id
+                )
+            )
+            is not None
+        ):
+            raise ValueError("Booking holds must use booking transitions")
         reconcile(connection, actor_id, slot, now)
         row = (
             connection.execute(select(holds).where(holds.c.id == hold_id))

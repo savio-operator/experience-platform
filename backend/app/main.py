@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.auth import router
+from app.api.bookings import router as bookings_router
 from app.api.intents import router as intents_router
 from app.api.inventory import router as inventory_router
 from app.api.ops import router as ops_router
@@ -38,6 +39,7 @@ async def lifespan(app: FastAPI):
 def create_app():
     app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
     app.include_router(router)
+    app.include_router(bookings_router)
     app.include_router(ops_router)
     app.include_router(inventory_router)
     app.include_router(intents_router)

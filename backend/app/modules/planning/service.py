@@ -86,6 +86,35 @@ def save_offer(engine, actor_id, slot_id, offer):
     return {"slot_id": slot_id}
 
 
+def evaluate_offer(conn, row, search, now):
+    payload = conn.scalar(
+        select(slot_offers.c.payload).where(slot_offers.c.slot_id == row["id"])
+    )
+    offer = Offer.model_validate_json(json.dumps(payload))
+    if offer.verified_until <= now or search.kind not in offer.intents:
+        raise ValueError("Offer is not current or suitable")
+    result = pricing.evaluate(
+        pricing.Evaluation(
+            requirements=search.requirements,
+            facts=offer.facts,
+            components=[
+                pricing.Component(
+                    service_id=row["service_id"],
+                    quantity=search.quantity,
+                    unit_price_paise=offer.unit_price_paise,
+                    unit_cost_paise=offer.unit_cost_paise,
+                )
+            ],
+            fees=offer.fees,
+            taxes=offer.taxes,
+            budget_paise=search.budget_paise,
+            minimum_margin_paise=offer.minimum_margin_paise,
+        ),
+        now=now,
+    )
+    return offer, result
+
+
 def generate(engine, search):
     candidates = []
     with engine.begin() as conn:
@@ -115,33 +144,7 @@ def generate(engine, search):
             if current["available_quantity"] < search.quantity:
                 continue
             try:
-                payload = conn.scalar(
-                    select(slot_offers.c.payload).where(
-                        slot_offers.c.slot_id == row["id"]
-                    )
-                )
-                offer = Offer.model_validate_json(json.dumps(payload))
-                if offer.verified_until <= now or search.kind not in offer.intents:
-                    continue
-                result = pricing.evaluate(
-                    pricing.Evaluation(
-                        requirements=search.requirements,
-                        facts=offer.facts,
-                        components=[
-                            pricing.Component(
-                                service_id=row["service_id"],
-                                quantity=search.quantity,
-                                unit_price_paise=offer.unit_price_paise,
-                                unit_cost_paise=offer.unit_cost_paise,
-                            )
-                        ],
-                        fees=offer.fees,
-                        taxes=offer.taxes,
-                        budget_paise=search.budget_paise,
-                        minimum_margin_paise=offer.minimum_margin_paise,
-                    ),
-                    now=now,
-                )
+                offer, result = evaluate_offer(conn, row, search, now)
             except ValueError:
                 # Corrupt or outdated server records cannot become options.
                 continue

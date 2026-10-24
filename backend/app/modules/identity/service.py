@@ -56,6 +56,8 @@ def throttle(engine, key, operation, ip, email=None):
             (f"send-minute:{email}", 1, 60),
             (f"send-hour:{email}", 5, 3600),
         ]
+    elif operation == "booking":
+        limits = [(f"booking-ip:{ip}", 30, 60), (f"booking-user:{email}", 15, 60)]
     elif operation == "options":
         limits = [(f"options-ip:{ip}", 30, 60), (f"options-user:{email}", 15, 60)]
     elif operation == "intent":

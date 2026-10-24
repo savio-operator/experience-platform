@@ -62,6 +62,8 @@ holds = Table(
         "created_at", DateTime(timezone=True), nullable=False, server_default=func.now()
     ),
     CheckConstraint("quantity > 0", name="hold_quantity_positive"),
-    CheckConstraint("state IN ('ACTIVE','RELEASED','EXPIRED')", name="hold_state"),
+    CheckConstraint(
+        "state IN ('ACTIVE','RELEASED','EXPIRED','CONFIRMED')", name="hold_state"
+    ),
     UniqueConstraint("slot_id", "idempotency_key", name="hold_request_unique"),
 )
