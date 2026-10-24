@@ -13,7 +13,7 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: `try{const t=localStorage.getItem("elsewhere-theme");document.documentElement.dataset.theme=t==="dark"||t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{document.documentElement.dataset.theme=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}` }} /></head><body>
+  return <html lang="en" suppressHydrationWarning><body>
     <div className={styles.banner}>Demo. No real booking or payment.</div>
     <a className="skip" href="#main">Skip to content</a>
     <AppHeader />

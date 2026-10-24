@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import s from "@/app/shell.module.css";
 
 export default function ThemeToggle() {
   const [dark, setDark] = useState(false);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const sync = () => {
       let saved: string | null = null;
