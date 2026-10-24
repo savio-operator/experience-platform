@@ -536,3 +536,9 @@ smoke test. Existing quality gates remain intact. See [the pre-launch checklist]
 for commands, security review, consent/deletion gaps, staging/monitoring recommendations
 and remaining launch gates. No cloud service, telemetry, deletion policy or live
 integration is enabled. Completing local checks does not establish production readiness.
+
+`GET /ready` checks database connectivity; database failure returns a generic 503
+without connection details. `/health` remains process liveness. Neither endpoint
+establishes vendor/provider availability, schema currency or production readiness.
+See [vendor outreach preparation](docs/VENDOR_OUTREACH.md) for sourced lead contacts,
+verification gaps and the unsent questionnaire. No researched lead is bookable inventory.

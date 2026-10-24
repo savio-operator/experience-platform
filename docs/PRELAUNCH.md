@@ -27,8 +27,8 @@ production connections or Render operations are enabled by this work.
   OS/container scanning, a penetration test or proof of absence of vulnerabilities.
   See [pip-audit documentation](https://github.com/pypa/pip-audit).
 - [x] Added local backup/restore and bounded load checks to CI (commands below).
-- [ ] Verify these new CI gates on GitHub after an authorized push. Local execution
-  does not establish that remote CI has passed.
+- [x] GitHub CI passed for commit `0590542`: [verified run](https://github.com/savio-operator/experience-platform/actions/runs/40069080654).
+  Subsequent local changes still require their own authorized push and CI verification.
 
 ## Repeatable disposable checks
 
@@ -89,8 +89,9 @@ session throttle; wait for its window to reset rather than weaken it.
   failures, unavailable health/readiness, payment review backlog, expired bookings,
   exhausted notifications, failed jobs and stale backups. Avoid sensitive alert content;
   link to authenticated ops views. Test delivery/acknowledgement and a recovery drill.
-- [ ] Define DB-aware readiness separately from current process-only `/health`, deploy
-  rollback procedure, job scheduling/recovery, backup encryption/access, offsite storage,
+- [x] `/ready` probes database connectivity and returns a generic 503 on DB failure;
+  `/health` remains process liveness. Readiness does not verify schema or providers.
+- [ ] Define deploy rollback procedure, job scheduling/recovery, backup encryption/access, offsite storage,
   retention, and recovery objectives. Test restores using approved staging infrastructure.
 - [ ] Scan the deployed image/base packages and review dependency findings regularly.
   Local Python package scanning does not cover the OS. Approve sustained-load scenarios
@@ -157,7 +158,8 @@ by Step 11; subsequent client work requires the roadmap's platform decision.
 - Redacted Gitleaks scans: zero findings in publishable working files and all available
   Git history. Intentional local `.env` excluded from file scanning, unchanged and
   untracked; this exclusion is not evidence about its contents. Scans are heuristic.
-- CI changes are local and unpushed; remote GitHub Actions is unverified.
+- The original hardening commit was subsequently pushed and passed remote CI (linked
+  above). New local changes are not covered by that result.
 
 The approved local implementation/review work is complete. The roadmap's full
 pre-launch acceptance criterion is not yet met: unchecked launch gates remain.

@@ -5,6 +5,7 @@ from uuid import uuid4
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.auth import router
@@ -90,6 +91,13 @@ def create_app():
     @app.get("/health")
     async def health() -> dict[str, str]:
         return {"status": "ok"}
+
+    @app.get("/ready")
+    def ready(request: Request) -> dict[str, str]:
+        # Connectivity only: schema upgrades remain an explicit release gate.
+        with request.app.state.engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+        return {"status": "ready"}
 
     return app
 

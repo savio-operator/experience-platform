@@ -51,3 +51,26 @@ def test_request_ids_and_logs(monkeypatch, caplog):
         f"request_id={first_id} status=200",
         f"request_id={second_id} status=200",
     ]
+
+
+def test_database_readiness(client):
+    response = client.get("/ready")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ready"}
+    assert response.headers["Cache-Control"] == "no-store"
+
+
+def test_unavailable_database_is_not_ready(client, application, monkeypatch, caplog):
+    from sqlalchemy.exc import OperationalError
+
+    def unavailable():
+        raise OperationalError("private-query", {}, Exception("private-db-value"))
+
+    monkeypatch.setattr(application.state.engine, "connect", unavailable)
+    with caplog.at_level(logging.INFO, logger="app"):
+        response = client.get("/ready")
+    assert response.status_code == 503
+    assert response.json() == {"detail": "Service unavailable"}
+    assert "private-db-value" not in response.text
+    assert "private-db-value" not in caplog.text
+    assert client.get("/health").status_code == 200
