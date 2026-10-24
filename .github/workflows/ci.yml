@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          version: "0.13.5"
+          python-version: "3.12"
+          enable-cache: false
+      - name: Install locked dependencies
+        working-directory: backend
+        run: uv sync --frozen
+      - name: Ruff
+        working-directory: backend
+        run: |
+          uv run --frozen ruff check .
+          uv run --frozen ruff format --check .
+      - name: Tests
+        working-directory: backend
+        run: uv run --frozen pytest
+      - name: Build Docker image
+        run: docker compose --env-file /dev/null -f infra/compose.yml build
+      - name: Verify container health
+        run: |
+          docker compose --env-file /dev/null -f infra/compose.yml up -d --wait --wait-timeout 60
+          python -c "import json, urllib.request; r = urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5); assert r.status == 200 and json.load(r) == {'status': 'ok'}"
+      - name: Stop container
+        if: always()
+        run: docker compose --env-file /dev/null -f infra/compose.yml down
