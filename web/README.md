@@ -32,8 +32,10 @@ in the app footer. Activity photos are representative, not evidence of an event 
 ## Chat-only planning
 
 All planning prompts now use the chat composer, including the existing
-`/questions/[field]` links used to edit a brief. There are no suggested-reply
-buttons or multiple-choice answers. Dates, times, areas and other preferences
+`/questions/[field]` links used to edit a brief. Three optional starter ideas
+(tonight, a relaxed date, and a forgotten anniversary) add editable text to the
+composer without sending it. Follow-up questions use free text, with no
+multiple-choice answers. Dates, times, areas and other preferences
 are preserved in the user's own words; budget validation still uses integer paise.
 Enter sends, Shift+Enter adds a line, and IME composition does not submit.
 

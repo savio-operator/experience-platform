@@ -1,7 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isFollowUpQuestion } from '../src/lib/chat-input.ts';
+import { appendStarter, isFollowUpQuestion } from '../src/lib/chat-input.ts';
+import { chatStarters } from '../src/lib/fixtures.ts';
 import { questions, isComplete } from '../src/lib/questions.ts';
+
+test('all three starters can fill a draft, including the anniversary idea', () => {
+  assert.equal(chatStarters.length, 3);
+  assert.equal(chatStarters[2].text, 'I forgot today was the anniversary');
+  for (const { text } of chatStarters) assert.equal(appendStarter('', text, 1000), text);
+});
+
+test('adding inspiration preserves existing draft text and respects the input limit', () => {
+  assert.equal(appendStarter('Budget ₹500.', 'A relaxed date', 1000), 'Budget ₹500. A relaxed date');
+  assert.equal(appendStarter('My idea\n', 'More detail', 1000), 'My idea\nMore detail');
+  assert.equal(appendStarter('abc', 'd', 5), 'abc d');
+  assert.equal(appendStarter('abc', 'de', 5), null);
+});
 
 test('all planning prompts accept text rather than fixed choices', () => {
   for (const question of questions) {

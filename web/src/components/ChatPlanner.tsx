@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useDemo } from "./DemoProvider";
-import { isFollowUpQuestion } from "@/lib/chat-input";
+import { appendStarter, isFollowUpQuestion } from "@/lib/chat-input";
 import { questions, type QuestionId } from "@/lib/questions";
 import { parseBudget, fitsBudget } from "@/lib/budget";
-import { discoveryEvents, formatMoney, options } from "@/lib/fixtures";
+import { chatStarters, discoveryEvents, formatMoney, options } from "@/lib/fixtures";
 import Photo from "./Photo";
 import s from "./chat.module.css";
 
@@ -44,6 +44,21 @@ export default function ChatPlanner({ startingQuestion }: { startingQuestion?: Q
     input.current.style.height = "auto";
     input.current.style.height = `${Math.min(input.current.scrollHeight, 180)}px`;
   }, [chat.draft]);
+
+  function addStarter(text: string) {
+    const draft = appendStarter(chat.draft, text, MAX_LENGTH);
+    if (draft === null) {
+      setError("Your message is nearly full. Shorten it before adding an idea.");
+      input.current?.focus();
+      return;
+    }
+    setChat(previous => ({ ...previous, draft }));
+    setError("");
+    requestAnimationFrame(() => {
+      input.current?.focus();
+      input.current?.setSelectionRange(draft.length, draft.length);
+    });
+  }
 
   function send() {
     const text = chat.draft.trim();
@@ -127,6 +142,12 @@ export default function ChatPlanner({ startingQuestion }: { startingQuestion?: Q
           </div>
         </form>
         <p id="chat-error" className={s.error} role="alert">{error}</p>
+        {chat.questionIndex === -1 && <div className={s.starters} role="group" aria-label="Suggested plan ideas">
+          <p>Or start with a little inspiration. Add an idea, then make it your own.</p>
+          <div>{chatStarters.map(starter => <button key={starter.id} type="button" onClick={() => addStarter(starter.text)}>
+            <span aria-hidden="true">{starter.icon}</span><span>{starter.text}</span><span aria-hidden="true">↗</span>
+          </button>)}</div>
+        </div>}
       </div>
       {finished && <div className={s.finished}>
         <Link href="/brief" className={s.review}>Review my brief <span aria-hidden="true">→</span></Link>

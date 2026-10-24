@@ -46,10 +46,10 @@ export type DemoOption = {
   art: "water" | "clay" | "table";
 };
 
-export const intents = [
-  { id: "tonight", title: "Find a little adventure", subtitle: "Something to do now or tonight", icon: "↗", enabled: true },
-  { id: "date", title: "Make time for two", subtitle: "A date worth putting your phone away for", icon: "♡", enabled: false },
-  { id: "birthday", title: "Make their day", subtitle: "Birthdays, surprises & little celebrations", icon: "✳", enabled: false },
+export const chatStarters = [
+  { id: "tonight", text: "Find me something to do in Kochi tonight", icon: "↗" },
+  { id: "date", text: "Help me plan a relaxed date in Kochi", icon: "♡" },
+  { id: "anniversary", text: "I forgot today was the anniversary", icon: "✳" },
 ] as const;
 
 export const options: DemoOption[] = [
