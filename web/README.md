@@ -25,4 +25,42 @@ and displayed in Asia/Kolkata. Sample totals are for two and are not matched to
 the user's answers. One option is unavailable and one has unknown travel time.
 No real inventory, booking, supplier, payment, or cancellation policy is represented.
 
-The visual scenes use CSS shapes, system fonts, and no external assets or UI kit.
+The interface uses system fonts and locally hosted photographs, with no UI kit.
+See `IMAGE_CREDITS.md` for source links and credits. Photo credits are also available
+in the app footer. Activity photos are representative, not evidence of an event or venue.
+
+## Chat-first home
+
+The home screen now has an editable chat composer and text suggestion buttons for
+an evening, a date or a birthday. Date and birthday are visibly disabled as coming soon.
+Clicking an enabled suggestion appends it to the draft and
+focuses the textarea; it never sends automatically. Enter sends, Shift+Enter adds a
+line, and IME composition does not submit. Empty drafts cannot be sent.
+
+Replies are explicitly scripted demo prompts using the existing eight-question
+configuration; no AI endpoint or provider is called. The conversation captures a
+brief and leads into the existing review/options flow. Whole-rupee budget validation
+is retained. The original idea is shown alongside the brief. Chat and unsent drafts
+stay in provider memory across navigation/preview states and reset on refresh or
+starting a new plan.
+
+## Chat and Discover
+
+The persistent mode switch opens Chat at `/` and Discover at `/discover`.
+Discover has six synthetic event concepts, category and Kochi-area filters, search,
+and details at `/discover/[id]`. The sample schedule is fixed on 24–25 October 2026,
+formatted in Asia/Kolkata. No live event schedule, price, vendor, or availability is asserted.
+
+“Bring this idea into Chat” adds a separate inspiration reference to the brief and
+opens the existing conversation. It only fills the draft when both the draft and
+conversation are empty; it never sends, overwrites answers, or resets an existing
+conversation. The reference can be removed in Chat. Filters survive mode switches.
+All of this state resets on a full refresh. Discovery offers loading, empty, and
+error simulations plus an actual no-results state with a clear-filters action.
+
+Photo assets are served from this app, so visitors do not contact the stock-photo
+sites to load them. Source links only open when a visitor chooses a photo credit.
+
+Validation: production build and TypeScript passed; local HTTP rendering checked.
+Interactive browser automation was unavailable. Confirm keyboard, touch scrolling,
+software-keyboard positioning and landscape safe areas on a real phone before release.

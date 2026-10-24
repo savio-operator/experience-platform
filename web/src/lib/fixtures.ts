@@ -1,3 +1,35 @@
+export const photos = {
+  water: { src: "/images/kochi.jpg", alt: "Chinese fishing nets silhouetted against the sunset at Fort Kochi", position: "center 56%", credit: "Ankur Khanna / Unsplash", subject: "Fort Kochi", source: "https://unsplash.com/photos/black-sailing-boat-under-sunset-TbPRyHcxw7o" },
+  clay: { src: "/images/pottery.jpg", alt: "Hands working clay with pottery tools", position: "center 55%", credit: "cottonbro studio / Pexels", subject: "Pottery", source: "https://www.pexels.com/photo/a-person-doing-pottery-6694323/" },
+  table: { src: "/images/dining.jpg", alt: "A shared restaurant table with dishes and drinks", position: "center", credit: "ROMAN ODINTSOV / Pexels", subject: "Dining", source: "https://www.pexels.com/photo/dinner-at-restaurant-4871107/" },
+  music: { src: "/images/music.jpg", alt: "An audience silhouetted beneath colourful concert lights", position: "center 43%", credit: "Daniel Marín / Pexels", subject: "Live music", source: "https://www.pexels.com/photo/lights-behind-crowd-on-concert-18384921/" },
+  gallery: { src: "/images/gallery.jpg", alt: "Visitors looking at paintings in an art gallery", position: "center", credit: "Fran Augusto / Pexels", subject: "Art", source: "https://www.pexels.com/photo/visitors-observing-art-in-a-gallery-setting-33714764/" },
+  yoga: { src: "/images/yoga.jpg", alt: "A woman practising yoga outdoors in Rishikesh, India", position: "center 45%", credit: "Rishikesh Yog Kendra / Pexels", subject: "Wellness", source: "https://www.pexels.com/photo/woman-practicing-yoga-outdoors-in-rishikesh-29534944/" },
+} as const;
+export type PhotoId = keyof typeof photos;
+
+export type DiscoveryEvent = {
+  id: string;
+  title: string;
+  category: "Outdoors" | "Workshops" | "Live music" | "Food" | "Art" | "Wellness";
+  area: string;
+  photo: PhotoId;
+  startsAt: string;
+  duration: string;
+  description: string;
+  note: string;
+};
+
+// Synthetic event concepts, not live listings. Dates are fixed demo dates in IST.
+export const discoveryEvents: DiscoveryEvent[] = [
+  { id: "sunset-walk", title: "Take the long way to sunset", category: "Outdoors", area: "Fort Kochi", photo: "water", startsAt: "2026-10-24T11:30:00Z", duration: "90 minutes", description: "A slow wander along the waterfront, a café stop, and a front-row seat to the evening. An idea for anyone who could use a little sea air.", note: "An outdoor walk concept. Route, accessibility, weather, and any café stop would need to be checked." },
+  { id: "after-hours", title: "An evening with a live soundtrack", category: "Live music", area: "Kakkanad", photo: "music", startsAt: "2026-10-24T14:30:00Z", duration: "2 hours", description: "Find your people, find your spot, and let a good set take care of the evening. A live-music night to build a plan around.", note: "No artist or venue is booked. Age restrictions, line-up, entry fees, and tickets are not verified." },
+  { id: "clay-club", title: "Less scrolling. More making.", category: "Workshops", area: "Panampilly Nagar", photo: "clay", startsAt: "2026-10-24T10:30:00Z", duration: "90 minutes", description: "Trade your screen for a little clay. A relaxed, beginner-friendly making session, with plenty of room for wonderfully imperfect results.", note: "A workshop concept. Instructor, materials, firing, collection, and access arrangements are not verified." },
+  { id: "supper-club", title: "Good food. Even better company.", category: "Food", area: "Marine Drive", photo: "table", startsAt: "2026-10-24T14:00:00Z", duration: "2 hours", description: "Make room for a long conversation and a shared table. A dining idea for the kind of evening that doesn’t need much of an agenda.", note: "No restaurant is reserved. Menu, dietary requirements, prices, and table availability need verification." },
+  { id: "art-afternoon", title: "A fresh perspective, frame by frame", category: "Art", area: "Fort Kochi", photo: "gallery", startsAt: "2026-10-25T05:30:00Z", duration: "90 minutes", description: "An unhurried gallery visit with time to look a little closer. A small dose of art, conversation, and inspiration for your weekend.", note: "An exhibition concept. No gallery programme, opening hours, curator, or entry fee has been verified." },
+  { id: "slow-morning", title: "Start with a little breathing room", category: "Wellness", area: "Marine Drive", photo: "yoga", startsAt: "2026-10-25T01:00:00Z", duration: "60 minutes", description: "A gentle start, some fresh air, and a pause before the city picks up its pace. A movement and mindfulness idea for your morning.", note: "A wellness concept, not a scheduled class. Teacher, location permission, suitability, and facilities need verification." },
+];
+
 export type DemoOption = {
   id: string;
   title: string;

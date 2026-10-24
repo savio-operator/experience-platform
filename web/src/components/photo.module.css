@@ -1,0 +1,2 @@
+.frame { position: absolute; inset: 0; overflow: hidden; background: #e5e7df; }
+.fallback { position: absolute; inset: 0; display: grid; place-items: center; color: #586653; font-size: 13px; }

@@ -3,18 +3,19 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ChatPlanner from "./ChatPlanner";
+import Photo from "./Photo";
 import { useDemo } from "./DemoProvider";
 import { questions, isComplete } from "@/lib/questions";
-import { intents, options, timeline, formatMoney, formatTime, type DemoOption } from "@/lib/fixtures";
+import { options, timeline, discoveryEvents, formatMoney, formatTime, type DemoOption } from "@/lib/fixtures";
 import s from "./demo.module.css";
 
 type PreviewState = "ready" | "loading" | "empty" | "error";
 const stages = ["Your idea", "The brief", "Your options", "Your request"];
 
 function Scene({ kind, large = false }: { kind: DemoOption["art"]; large?: boolean }) {
-  return <div className={`${s.scene} ${s[kind]} ${large ? s.sceneLarge : ""}`} aria-hidden="true">
-    <span className={s.sun} /><span className={s.horizon} /><span className={s.shapeOne} /><span className={s.shapeTwo} /><span className={s.shapeThree} />
-    <span className={s.artCaption}>{kind === "water" ? "THE WATERFRONT EDIT" : kind === "clay" ? "MAKE SOMETHING OF TODAY" : "PULL UP A CHAIR"}</span>
+  return <div className={`${s.scene} ${large ? s.sceneLarge : ""}`}>
+    <Photo id={kind} eager={large} />
   </div>;
 }
 
@@ -42,6 +43,7 @@ export default function DemoScreen({ path = "" }: { path?: string }) {
   const question = questions[questionIndex];
   const option = path.startsWith("options/") ? options.find(item => item.id === path.split("/")[1]) : undefined;
   const selected = options.find(item => item.id === demo.selectedId);
+  const inspiration = discoveryEvents.find(item => item.id === demo.inspirationId);
   const complete = isComplete(demo.answers);
   const stage = path === "brief" ? 1 : path.startsWith("options") ? 2 : path === "checkout" || path === "booking" ? 3 : 0;
 
@@ -75,14 +77,7 @@ export default function DemoScreen({ path = "" }: { path?: string }) {
 
   let content: ReactNode;
   if (!path) {
-    content = <>
-      <div className={s.hero}>
-        <div><p className={s.eyebrow}><span className={s.smallLine} /> LESS PLANNING. MORE LIVING.</p><h1>Good evenings<br />start with a<br /><span className={s.softWord}>little idea.</span><span className={s.spark} aria-hidden="true">✳</span></h1><p className={s.heroCopy}>A change of scenery. Something new to try.<br />Let’s find your kind of good time in Kochi.</p><div className={s.heroNote}><span className={s.noteIcon} aria-hidden="true">↗</span><span>A few questions.<br /><strong>A plan that feels like you.</strong></span></div></div>
-        <div className={s.heroArt}><Scene kind="water" large /><span className={s.postcard}>a little<br /><em>elsewhere.</em></span><span className={s.artTag}>9.9312° N · 76.2673° E</span></div>
-      </div>
-      <div className={s.sectionLabel}><h2>What brings you here?</h2><span>ONE SMALL IDEA IS ALL IT TAKES</span></div>
-      <div className={s.intentGrid}>{intents.map(intent => <button key={intent.id} className={`${s.intent} ${intent.enabled ? s.activeIntent : ""}`} disabled={!intent.enabled} onClick={() => router.push("/questions/when")}><span className={s.intentIcon} aria-hidden="true">{intent.icon}</span><span className={s.intentText}><strong>{intent.title}</strong><span>{intent.subtitle}</span></span><span className={s.intentEnd}>{intent.enabled ? <span aria-hidden="true">↗</span> : "Coming soon"}</span></button>)}</div>
-    </>;
+    content = <ChatPlanner />;
   } else if (question) {
     const value = demo.answers[question.id];
     content = <div className={s.narrow}><div className={s.questionTop}><span>YOUR EVENING, YOUR WAY</span><span>{String(questionIndex + 1).padStart(2, "0")} / 08</span></div><div className={s.progress}><span style={{ width: `${(questionIndex + 1) / questions.length * 100}%` }} /></div><Heading eyebrow={`QUESTION ${questionIndex + 1}`} title={question.title}>{question.hint}</Heading>
@@ -94,7 +89,7 @@ export default function DemoScreen({ path = "" }: { path?: string }) {
         <div className={s.formFooter}><span>You can change this later.</span><button className={s.primary} type="submit">{questionIndex === 7 ? "See my brief" : "Continue"}<span aria-hidden="true">→</span></button></div>
       </form></div>;
   } else if (path === "brief") {
-    content = complete ? <div className={s.narrow}><Heading eyebrow="THE BRIEF" title="Here’s the evening you have in mind.">A quick check before we explore the possibilities.</Heading><div className={s.briefCard}>
+    content = complete ? <div className={s.narrow}><Heading eyebrow="THE BRIEF" title="Here’s the evening you have in mind.">A quick check before we explore the possibilities.</Heading>{demo.chat.idea && <p className={s.demoNotice}>Your original idea: {demo.chat.idea}</p>}{inspiration && <p className={s.demoNotice}>Inspired by <Link href={`/discover/${inspiration.id}`}>{inspiration.title}</Link> from Discover. This sample is not a reserved event.</p>}<div className={s.briefCard}>
       <div><span className={s.briefNumber}>01</span><h2>What</h2><p>{demo.answers.kind} in {demo.answers.where?.toLowerCase()}.</p><dl><dt>When</dt><dd>{demo.answers.when}</dd><dt>Company</dt><dd>{demo.answers.who}</dd></dl></div>
       <div><span className={s.briefNumber}>02</span><h2>Why</h2><p>{demo.answers.occasion}</p></div>
       <div><span className={s.briefNumber}>03</span><h2>Which</h2><dl><dt>Total budget</dt><dd>{formatMoney(demo.answers.budget!)}</dd><dt>Keep in mind</dt><dd>{demo.answers.constraints}</dd><dt>Getting there</dt><dd>{demo.answers.transport}</dd></dl></div>
@@ -102,7 +97,7 @@ export default function DemoScreen({ path = "" }: { path?: string }) {
   } else if (path === "options") {
     content = complete ? <><Heading eyebrow="A FEW POSSIBILITIES" title="Three ways to make an evening.">Illustrative experiences, sample prices, and honest availability. Pick one to take a closer look.</Heading><div className={s.demoNotice}>These are fixed demo fixtures for 24 October 2026. They are not matched to your budget, group, timing, or constraints.</div><div className={s.optionGrid}>{options.map((item, index) => <article key={item.id} className={s.optionCard}><div className={s.cardArt}><Scene kind={item.art} /><span className={s.optionNumber}>0{index + 1}</span></div><div className={s.optionBody}><div className={s.cardMeta}>{item.category} <span>· {item.area}</span></div><h2>{item.title}</h2><Status option={item} /><ul className={s.inclusions}>{item.inclusions.map(inclusion => <li key={inclusion}>{inclusion}</li>)}</ul><div className={s.optionFacts}><span>{item.durationMinutes} min experience</span><span>Travel: {item.travelMinutes === null ? "Not provided" : `${item.travelMinutes} min`}</span></div><p className={s.terms}>{item.cancellationTerms}</p><div className={s.priceRow}><div><strong>{formatMoney(item.pricePaise)}</strong><span>sample total for two</span></div><Link className={s.roundLink} href={`/options/${item.id}`} aria-label={`View ${item.title}`}>↗</Link></div></div></article>)}</div><Link href="/brief" className={s.textLink}>Not your kind of evening? Edit your brief →</Link></> : <Empty href="/questions/when">Start with a few questions to explore the sample options.</Empty>;
   } else if (option) {
-    content = complete ? <div className={s.detail}><div><Scene kind={option.art} large /><p className={s.finePrint}>Original illustration · synthetic experience, no real supplier</p></div><div><Heading eyebrow={`${option.category} · ${option.area}`} title={option.title}>{option.description}</Heading><Status option={option} /><p className={s.detailPrice}>{formatMoney(option.pricePaise)} <span>sample total for two</span></p><dl className={s.detailFacts}><dt>Sample start</dt><dd>{formatTime(option.startsAt)} IST</dd><dt>Duration</dt><dd>{option.durationMinutes} minutes</dd><dt>Travel time</dt><dd>{option.travelMinutes === null ? "Not provided" : `${option.travelMinutes} minutes`}</dd></dl><h2 className={s.smallTitle}>A little more included</h2><ul className={s.inclusions}>{option.inclusions.map(item => <li key={item}>{item}</li>)}</ul><div className={s.termsBox}><h3>Cancellation terms</h3><p>{option.cancellationTerms}</p></div><div className={s.actions}><Link className={s.secondary} href="/brief">Customise</Link><button className={s.primary} disabled={option.availability === "UNAVAILABLE"} onClick={() => { demo.select(option.id); router.push("/checkout"); }}>{option.availability === "UNAVAILABLE" ? "Unavailable" : "Proceed"}{option.availability === "AVAILABLE" && <span aria-hidden="true">→</span>}</button></div><p className={s.finePrint}>Sample only. Proceeding does not reserve inventory.</p></div></div> : <Empty href="/questions/when">Complete your brief before choosing a sample experience.</Empty>;
+    content = complete ? <div className={s.detail}><div><Scene kind={option.art} large /><p className={s.finePrint}>Representative photo · synthetic experience, no real supplier</p></div><div><Heading eyebrow={`${option.category} · ${option.area}`} title={option.title}>{option.description}</Heading><Status option={option} /><p className={s.detailPrice}>{formatMoney(option.pricePaise)} <span>sample total for two</span></p><dl className={s.detailFacts}><dt>Sample start</dt><dd>{formatTime(option.startsAt)} IST</dd><dt>Duration</dt><dd>{option.durationMinutes} minutes</dd><dt>Travel time</dt><dd>{option.travelMinutes === null ? "Not provided" : `${option.travelMinutes} minutes`}</dd></dl><h2 className={s.smallTitle}>A little more included</h2><ul className={s.inclusions}>{option.inclusions.map(item => <li key={item}>{item}</li>)}</ul><div className={s.termsBox}><h3>Cancellation terms</h3><p>{option.cancellationTerms}</p></div><div className={s.actions}><Link className={s.secondary} href="/brief">Customise</Link><button className={s.primary} disabled={option.availability === "UNAVAILABLE"} onClick={() => { demo.select(option.id); router.push("/checkout"); }}>{option.availability === "UNAVAILABLE" ? "Unavailable" : "Proceed"}{option.availability === "AVAILABLE" && <span aria-hidden="true">→</span>}</button></div><p className={s.finePrint}>Sample only. Proceeding does not reserve inventory.</p></div></div> : <Empty href="/questions/when">Complete your brief before choosing a sample experience.</Empty>;
   } else if (path === "checkout") {
     content = selected && complete && selected.availability === "AVAILABLE" ? <div className={s.narrow}><Heading eyebrow="ONE LAST LOOK" title="Your evening, on the page.">This is a payment simulation. No details or money required.</Heading><div className={s.checkoutCard}><Scene kind={selected.art} /><div><span className={s.eyebrow}>{selected.area}</span><h2>{selected.title}</h2><p>{formatTime(selected.startsAt)} IST · {selected.durationMinutes} min</p></div></div><div className={s.total}><span>Sample total for two</span><strong>{formatMoney(selected.pricePaise)}</strong></div><p className={s.terms}>{selected.cancellationTerms}</p><div className={s.demoNotice}>Your answers have not been checked against this sample experience. This button only opens a simulated request status.</div><button className={`${s.primary} ${s.fullWidth}`} onClick={() => { demo.request(); router.push("/booking"); }}>Demo payment <span aria-hidden="true">→</span></button><p className={s.finePrint}>No charge. No payment provider. No reservation.</p></div> : <Empty href={complete ? "/options" : "/questions/when"} action="Choose an experience">Choose an available sample option before opening checkout.</Empty>;
   } else if (path === "booking") {
