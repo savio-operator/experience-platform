@@ -29,21 +29,29 @@ The interface uses system fonts and locally hosted photographs, with no UI kit.
 See `IMAGE_CREDITS.md` for source links and credits. Photo credits are also available
 in the app footer. Activity photos are representative, not evidence of an event or venue.
 
-## Chat-first home
+## Chat-only planning
 
-The home screen now has an editable chat composer and text suggestion buttons for
-an evening, a date or a birthday. Date and birthday are visibly disabled as coming soon.
-Clicking an enabled suggestion appends it to the draft and
-focuses the textarea; it never sends automatically. Enter sends, Shift+Enter adds a
-line, and IME composition does not submit. Empty drafts cannot be sent.
+All planning prompts now use the chat composer, including the existing
+`/questions/[field]` links used to edit a brief. There are no suggested-reply
+buttons or multiple-choice answers. Dates, times, areas and other preferences
+are preserved in the user's own words; budget validation still uses integer paise.
+Enter sends, Shift+Enter adds a line, and IME composition does not submit.
 
-Replies are explicitly scripted demo prompts using the existing eight-question
-configuration; no AI endpoint or provider is called. The conversation captures a
-brief and leads into the existing review/options flow. Whole-rupee budget validation
-is retained; explicit amounts such as “500rupees” in the opening idea are captured
-as the total budget and are not asked again. Ambiguous amounts require the budget question. The original idea is shown alongside the brief. Chat and unsent drafts
-stay in provider memory across navigation/preview states and reset on refresh or
-starting a new plan.
+Replies remain explicitly labelled as a preview with AI offline. A conservative
+question check keeps obvious follow-up questions from overwriting the current
+preference and repeats the active prompt. This is not semantic understanding and
+cannot answer general questions. Live OpenAI replies require an approved spending
+limit, server-side provider configuration, and production authentication/backend
+setup; the current FastAPI backend intentionally allows local/test use only.
+No OpenAI requests or paid services are enabled by these frontend changes.
+
+The Siri-inspired treatment uses a static luminous orb, soft surfaces and a
+single composer. Typing and sending stay immediate, with no decorative motion
+on keyboard input and no simulated microphone/listening state. Check the visual
+balance, touch keyboard and narrow-screen layout on a real device before release.
+
+Conversation state and drafts stay in memory across navigation and reset on
+refresh. An explicit budget in the opening idea is captured and not asked again.
 
 ## Chat and Discover
 

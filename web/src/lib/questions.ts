@@ -3,17 +3,17 @@ export type Answers = {
   budget?: number; kind?: string; constraints?: string; transport?: string;
 };
 export type QuestionId = keyof Answers;
-type Question = { id: QuestionId; title: string; hint: string; type: "choice" | "budget" | "text"; choices?: string[]; placeholder?: string };
+type Question = { id: QuestionId; title: string; hint: string; type: "budget" | "text"; placeholder: string };
 
 export const questions: Question[] = [
-  { id: "when", title: "When shall we head out?", hint: "A little spontaneity, on your schedule.", type: "choice", choices: ["Now · next 2 hours", "This evening · before 7 pm", "Tonight · after 7 pm"] },
-  { id: "where", title: "Which part of Kochi?", hint: "Pick the area you’d like to explore.", type: "choice", choices: ["Fort Kochi", "Panampilly Nagar", "Marine Drive", "Kakkanad", "Edappally", "Anywhere in Kochi"] },
-  { id: "who", title: "Who’s coming along?", hint: "Good company includes your own.", type: "choice", choices: ["Just me", "Two of us", "A small group · 3–4", "A bigger group · 5+"] },
-  { id: "occasion", title: "What’s the occasion?", hint: "An ordinary evening is a perfectly good reason.", type: "choice", choices: ["No occasion, just because", "Catching up", "A little celebration", "Time to unwind"] },
-  { id: "budget", title: "What feels comfortable?", hint: "Your total budget for everyone, in rupees. Nothing is charged.", type: "budget", placeholder: "Enter your total budget" },
-  { id: "kind", title: "What are you in the mood for?", hint: "Choose the feeling you’d like the evening to have.", type: "choice", choices: ["Something calm", "Something creative", "Something outdoors", "Something delicious", "Surprise me"] },
-  { id: "constraints", title: "Anything we should keep in mind?", hint: "Dietary needs, accessibility, no alcohol, or anything else. Type “None” if there’s nothing to add.", type: "text", placeholder: "For example: vegetarian, step-free access…" },
-  { id: "transport", title: "How would you like to get there?", hint: "Tell us your preference. Transport is not booked in this demo.", type: "choice", choices: ["I have my own transport", "I’ll take a taxi", "Public transport", "Walking distance only", "No preference"] },
+  { id: "when", title: "When would you like to go?", hint: "Tell me your preferred date and time, in your own words.", type: "text", placeholder: "Tomorrow around 8:30 pm, or Saturday after lunch…" },
+  { id: "where", title: "Where in Kochi would you like to be?", hint: "Any neighbourhood, a nearby landmark, or anywhere in Kochi is fine.", type: "text", placeholder: "Somewhere near Fort Kochi, within a short drive…" },
+  { id: "who", title: "Who’s coming along?", hint: "Tell me how many people and anything I should know about your group.", type: "text", placeholder: "Three friends and me…" },
+  { id: "occasion", title: "What’s the occasion?", hint: "It can be a celebration, a catch-up, or simply time for yourself.", type: "text", placeholder: "A quiet evening together, no special occasion…" },
+  { id: "budget", title: "What total budget feels comfortable?", hint: "Your budget for everyone, in rupees. Nothing is charged.", type: "budget", placeholder: "₹500 total for everyone…" },
+  { id: "kind", title: "What kind of experience are you imagining?", hint: "Describe the feeling, activity or idea you have in mind.", type: "text", placeholder: "Something outdoors and relaxed, maybe near the water…" },
+  { id: "constraints", title: "Anything else I should keep in mind?", hint: "Dietary needs, accessibility, things to avoid, or “none” if there’s nothing to add.", type: "text", placeholder: "Vegetarian food, step-free access, no alcohol…" },
+  { id: "transport", title: "How would you like to get there?", hint: "Describe your transport preference. Transport is not booked in this preview.", type: "text", placeholder: "We’ll drive, but I’d rather avoid a long journey…" },
 ];
 
 export function isComplete(answers: Answers) {
