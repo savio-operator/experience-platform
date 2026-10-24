@@ -10,6 +10,7 @@ from app.modules.bookings.models import bookings
 from app.modules.bookings.service import PENDING, SYSTEM_ACTOR
 from app.modules.identity.models import users
 from app.modules.inventory.service import lock_slot
+from app.modules.notifications import service as notifications
 from app.modules.payments.gateway import Event, Observation
 from app.modules.payments.models import payment_events, payments
 
@@ -165,6 +166,14 @@ def store(conn, row, booking, now, state, unknown=False):
             "updated",
             ["state", "review_reason"],
         )
+        if state != row["state"] and state in {"SUCCEEDED", "FAILED"}:
+            notifications.enqueue(
+                conn,
+                row["booking_id"],
+                "PAYMENT_" + state,
+                SYSTEM_ACTOR,
+                payment_id=row["id"],
+            )
         row.update(state=state, review_reason=review)
     return public(row, booking, now)
 

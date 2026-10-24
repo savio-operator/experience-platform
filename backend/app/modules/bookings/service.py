@@ -8,6 +8,7 @@ from app.modules.bookings.models import bookings
 from app.modules.identity.models import users
 from app.modules.inventory import service as inventory
 from app.modules.inventory.models import holds
+from app.modules.notifications import service as notifications
 from app.modules.planning import service as planning
 
 PENDING = "VENDOR_CONFIRMATION_PENDING"
@@ -77,6 +78,9 @@ def transition(conn, actor, slot, row, item, target, now, evidence=None):
             "confirmed" if confirmed else "failed",
             ["state"],
         )
+    notifications.enqueue(
+        conn, row["id"], "BOOKING_CONFIRMED" if confirmed else "BOOKING_FAILED", actor
+    )
     row["state"] = target
     item.update(fields)
     quantity = inventory.active_quantity(conn, slot["id"], now)

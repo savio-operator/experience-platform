@@ -434,3 +434,49 @@ Payment initiation is limited to 15/user/minute and 30/IP/minute; webhook intake
 Provider-specific delivery requirements must be reviewed before any live activation.
 
 Step 8: Done when: duplicate webhooks and payment-succeeds-booking-fails cases are handled by tests.
+
+## Step 9: durable notifications (delivery disabled)
+
+Apply migration `0007` explicitly. Booking confirmation/failure and verified payment
+success/failure changes enqueue one notification in the same database transaction as
+the source update and audit records. State-change notices use BOOKING_CONFIRMED,
+BOOKING_FAILED, PAYMENT_SUCCEEDED and PAYMENT_FAILED. No notice is generated from
+pending, unknown or client-asserted outcomes. No invented booking-amendment operation
+is added; notices cover the state changes the backend actually supports.
+
+Ops may schedule a reminder with `POST /ops/bookings/{id}/reminders`, supplying only
+an explicit timezone-aware `due_at` after now and before the slot starts. The booking
+must already be confirmed with recorded component evidence. No reminder timing policy
+is inferred. Equal instants in different offsets deduplicate to the same reminder.
+`GET /notifications/{id}` exposes tracking to the owner or ops; other users receive
+404. Ops-only `POST /ops/notifications/{id}/dispatch` accepts `{}`. Existing session
+rate limits and origin/JSON protections apply. Recipients come only from source
+ownership records, never request fields.
+
+The runtime adapter always refuses delivery before claiming work or consuming retries.
+No provider, channel, message text, recipient address lookup, consent policy or live
+SDK is enabled. Fixtures receive identifiers/event kind only. `SENT` means adapter
+acceptance with a receipt, not confirmed recipient delivery/read status. Actual
+provider receipts, templates and delivery callbacks remain deferred.
+
+The worker claims durable leases and rechecks source state/evidence immediately
+before dispatch. Stale reminders and superseded payment-failure notices are cancelled.
+Each record has at most three dispatch attempts, a 30-second lease, a two-second
+adapter deadline and a 60-second retry delay. These are local operational bounds,
+not provider guarantees. Error details are never persisted or logged; tracking stores
+only bounded error categories. Expired leases recover interrupted work. Exhausted or
+uncertain records remain FAILED for review; there is no unlimited retry/reset route.
+
+Dispatch holds the inventory lock through the bounded adapter attempt so supported
+source transitions cannot race eligibility checks. Adapter calls use the notification
+UUID as a stable idempotency key. If acceptance succeeds but database commit fails,
+lease recovery retries that same key. A future live adapter must provide compatible
+deduplication; exactly-once external delivery is not claimed. The queue is bounded per
+batch and uses row locking to avoid simultaneous duplicate claims.
+
+From `backend/`, with explicit local/test configuration, the future enabled worker
+entry point is `uv run --frozen python -m app.jobs.dispatch_notifications` (up to 100
+records). It currently exits safely with delivery disabled. No scheduler is installed.
+No historical backfill or unrelated booking/payment features are introduced.
+
+Step 9: Done when: messages only send after verified state.
