@@ -4,7 +4,8 @@
 
 -   Inspect relevant project rules, requirements and repository state before
     each task; avoid rereading unchanged documents. Work on ONE roadmap step
-    at a time. Do not start the next step automatically.
+    at a time. Plan the next step automatically after completion, but do not
+    implement it without authorization.
 -   For an authorized implementation step, briefly state its objective and
     implement related changes together. Make routine decisions autonomously
     within the approved architecture; do not seek repeated plan approvals.
@@ -13,14 +14,18 @@
 -   Reuse existing code and dependencies. Run focused checks when useful, then
     required final checks; fix failures and rerun affected checks. Do not repeat
     successful checks without a reason. Commit completed work locally when
-    appropriate. Report actual results, acceptance criteria and limitations;
-    stop and ask whether to continue to the actual next step in PLAN.md.
+    appropriate. Report actual results, acceptance criteria and limitations.
+    Then inspect PLAN.md and relevant documentation and prepare a concise plan
+    for the actual next step: objective, essential changes, dependencies,
+    security, verification and genuine blockers. Present it for approval and
+    wait for implementation authorization. If the roadmap is complete, report
+    completion instead of inventing a step.
 -   Never use Render credentials or perform Render account operations without
     explicit authorization for the specific operation. No unapproved cloud
     resources, costs, production changes or destructive Git operations.
 -   Make small, focused changes. Each step ends with relevant
-    tests/checks passing and a short summary of what changed. Stop and
-    wait.
+    tests/checks passing and a short summary of what changed, followed by
+    the next-step plan. Do not move forward while required checks are failing.
 -   Never add features, libraries or services not in the plan without
     asking.
 -   If a requirement is risky, costly or unclear, say so instead of
@@ -177,4 +182,5 @@
     make a build pass.
 -   At the end of the approved step, report: files changed, behaviour
     implemented, checks run and their results, known limitations, and
-    the next proposed step. Then stop and wait for approval.
+    a concise implementation plan for the next actual roadmap step. Then stop
+    and wait for authorization to implement it. Honor all roadmap gates.

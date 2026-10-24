@@ -1,6 +1,6 @@
 # PLAN.md: Roadmap. ONE STEP AT A TIME.
 
-Rule: finish a step (code, tests, review, my approval) before starting the next. Do not read ahead or prebuild later steps. After each step, summarise and stop.
+Rule: implement and verify one step at a time. After completion, report actual results and automatically inspect and prepare a concise plan for the next numbered step. Present that plan and wait for authorization before implementation. Do not prebuild later steps. If the roadmap is complete, report that instead. All gates below remain in force.
 
 GATE: Do not start Step 3 until at least one real vendor has agreed to a pilot (even verbally). Steps 0-2 are safe either way.
 

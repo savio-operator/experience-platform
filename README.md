@@ -137,13 +137,17 @@ migrations, runs Ruff and pytest, builds Docker, and verifies container health.
 - Preserve the existing `.env`; exclude real environment files from Git and
   Docker. Scan publishable files and all Git history before publishing. Excluding
   local `.env` does not establish that other files are clean; scanners have limits.
-- After each step, verify its acceptance criteria with actual results, report
-  changed files/checks/limitations, read the actual next step in `docs/PLAN.md`,
-  and ask whether to inspect and plan it or do something else. Never start it
-  automatically. Within an authorized implementation step, proceed autonomously
-  with routine coding, testing and fixes. Ask only about material decisions or
-  blockers; silence is not permission for another step or production operations. On failure, report it and propose a fix. If the plan
-  is finished, say so and ask what to do next without inventing another step.
+- After each step, verify acceptance criteria, fix failures and report actual
+  changes/checks/limitations. Automatically inspect the next step in `docs/PLAN.md`
+  and relevant documentation, then present a concise plan covering objective,
+  essential changes, dependencies, security, verification and genuine blockers.
+  Wait for authorization before implementing it; honor roadmap gates.
+- Within an authorized step, make routine decisions autonomously and batch related
+  changes. Ask only about material ambiguities, security, architecture, costs or
+  data integrity. Avoid rereading unchanged documents and repeating successful
+  checks. If the roadmap is complete, report that without inventing another step.
+- Silence never authorizes another implementation step, production operations,
+  paid resources or use of Render credentials.
 
 Project documents are in `docs/`; AIRULES records the approved autonomous workflow.
 Render keys and account operations require specific explicit authorization.
