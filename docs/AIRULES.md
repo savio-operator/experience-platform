@@ -20,6 +20,14 @@
     security, verification and genuine blockers. Present it for approval and
     wait for implementation authorization. If the roadmap is complete, report
     completion instead of inventing a step.
+-   Optimize local verification: run affected tests during development and
+    affected/integration tests before committing. Run the full suite at major
+    milestones or when shared infrastructure, authentication, authorization,
+    transactions or other critical components change. Reuse valid passing
+    results; rerun only when inputs/dependencies change or failures require it.
+    Keep CI quality gates intact. Run Docker, migrations and secret scans when
+    relevant files change or at required release checkpoints. Report new results,
+    regressions and outstanding failures; never claim unexecuted checks passed.
 -   Never use Render credentials or perform Render account operations without
     explicit authorization for the specific operation. No unapproved cloud
     resources, costs, production changes or destructive Git operations.

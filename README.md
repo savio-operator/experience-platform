@@ -249,3 +249,31 @@ No new dependencies or migrations are needed. Provider selection, live usage,
 verified pricing and real-model evaluation remain deferred pending authorization.
 
 Step 4: Done when: sample requests become valid structured intents; bad output is rejected.
+
+
+## Step 5: constraints and pricing
+
+`app.modules.pricing.service.evaluate` is an internal, side-effect-free rules
+boundary for subsequent options generation; it is not a customer pricing API.
+It requires explicit components, fees, taxes, budget and minimum margin. Components
+carry service UUID, quantity, unit selling price and unit cost; fees carry separate
+charge/cost amounts. All amounts are integer INR paise. Taxes are explicit
+pass-through collected amounts excluded from margin; no tax rates, jurisdiction
+rules, deductions, fee policies or minimum margins are inferred. Empty fees/taxes
+must be explicitly supplied. Missing or invalid prices/costs are validation errors.
+
+Hard/soft requirements support exact equality and integer bounds. Facts need a
+source UUID and a future verification deadline. Missing, expired or incompatible
+facts cannot satisfy a hard requirement. Soft results remain visible without
+rejecting the candidate. Budget and margin pass/fail are independent; final
+acceptance requires both and every hard requirement. Negative margins are reported
+as losses and fail a nonnegative explicitly supplied margin threshold. Totals beyond
+the supported safe integer range are rejected rather than rounded or truncated.
+
+Callers must obtain evidence and prices from trusted server-side sources, resolve
+all mandatory free-text constraints, and supply the server clock. A UUID alone is
+not proof of vendor verification. This pure evaluator does not authenticate evidence
+or determine tax applicability. No endpoint accepts client/model assertions as facts.
+Real prices, policy and tax inputs remain unavailable; tests use synthetic data only.
+
+Step 5: Done when: plans violating hard constraints never pass.
