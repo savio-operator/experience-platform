@@ -277,3 +277,47 @@ or determine tax applicability. No endpoint accepts client/model assertions as f
 Real prices, policy and tax inputs remain unavailable; tests use synthetic data only.
 
 Step 5: Done when: plans violating hard constraints never pass.
+
+## Step 6: verified options
+
+Apply migration `0004` explicitly. One `slot_offers` record per slot stores an
+ops-managed JSON snapshot, validated on both write and read. This avoids a separate
+pricing-policy engine. `PUT /ops/inventory/slots/{id}/offer` requires `ops_admin` and
+records an audit event atomically. Required fields: `source_id` (reference to ops
+verification), `verified_until`, `location: "Kochi"`, supported `intents`,
+`unit_price_paise`, `unit_cost_paise`, explicit `fees`, `taxes`,
+`minimum_margin_paise`, and `facts` using Step 5's evidence schema. No values or
+vendor agreement are inferred. Offer/fact verification cannot outlast slot release.
+An ops assertion requires actual supporting evidence before real use; synthetic
+fixtures are not vendor verification. Replacing an offer does not verify inventory.
+
+`POST /options` requires authentication. Send `kind`, timezone-aware `starts_after`
+and `ends_before` (positive window, at most seven days), `quantity` of inventory
+capacity units, `budget_paise`, and explicit structured `requirements`. Unresolved
+mandatory requirements must remain in that list; unknown facts fail closed. Raw AI
+text is not automatically converted or silently discarded. Client prices, facts,
+verification and margin fields are rejected. Limits are 15 requests/user/minute and
+30/IP/minute, in addition to existing session limits.
+
+Each candidate is one service/slot, entirely inside the requested time window.
+Only fresh verified availability with sufficient remaining capacity and fresh
+ops-managed offer data can qualify. Reuse Step 5 to check all hard requirements,
+budget and margin. Fees and taxes supplied in the offer are fixed totals for this
+option; unit selling prices/costs multiply by requested units. This is an explicit
+supported data shape, not a real vendor fee or tax policy. Per-unit or conditional
+fees/taxes must be resolved by ops before publishing; they are not inferred.
+
+Rank by matched soft preferences, then ascending total price, start time and slot
+UUID. Keep the best slot per service and return at most three distinct services.
+Responses expose customer totals and constraint results, never cost/margin or source
+references. `AVAILABLE_VERIFIED`, `observed_at`, `valid_until` and `is_booking: false`
+describe a checked observation, not a reservation or confirmation. Stale, unknown,
+unverified, unavailable and fully held inventory are excluded; no matches returns
+`{"options": []}`. Partial holds permit only remaining verified capacity.
+
+Search and offer updates use inventory row locks in stable order. Availability,
+holds and prices must be revalidated at booking; no hold or booking is created here.
+This minimal version offers single-service plans, not multi-service combinations.
+No live AI, vendor connection, price discovery, payment or cloud work is enabled.
+
+Step 6: Done when: a request returns options built only from verified inventory.

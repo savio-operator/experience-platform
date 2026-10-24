@@ -11,6 +11,7 @@ from app.api.auth import router
 from app.api.intents import router as intents_router
 from app.api.inventory import router as inventory_router
 from app.api.ops import router as ops_router
+from app.api.planning import router as planning_router
 from app.core.config import load_settings
 from app.core.db import make_engine
 from app.modules.identity.delivery import LocalDiscardDelivery
@@ -40,6 +41,7 @@ def create_app():
     app.include_router(ops_router)
     app.include_router(inventory_router)
     app.include_router(intents_router)
+    app.include_router(planning_router)
 
     @app.exception_handler(RequestValidationError)
     async def invalid_request(request, error):

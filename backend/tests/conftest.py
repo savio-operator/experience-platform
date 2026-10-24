@@ -35,7 +35,8 @@ def db(engine):
         connection.execute(
             text(
                 "TRUNCATE sessions, user_roles, consents, customers, users, "
-                "otp_challenges, auth_limits, holds, inventory_slots, services, vendors"
+                "otp_challenges, auth_limits, slot_offers, holds, "
+                "inventory_slots, services, vendors"
             )
         )
     return engine
