@@ -1,5 +1,8 @@
 # Elsewhere — fixture-only web demo
 
+Current chat history, photography and disabled AI integration: see [CHAT_DEMO.md](CHAT_DEMO.md).
+That document supersedes the older chat/session notes below.
+
 Run `npm install`, then `npm run dev` from this directory. Open http://localhost:3000.
 
 Run `npm test` (Node 22.18+ with native TypeScript support) and `npm run build` to verify changes.

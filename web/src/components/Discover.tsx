@@ -79,7 +79,7 @@ export default function Discover({ eventId }: { eventId?: string }) {
           <div className={s.cardBody}><p className={s.cardTime}>{formatTime(item.startsAt)} IST <span>· Sample</span></p><h3>{item.title}</h3><p className={s.cardArea}>{item.area} <span>· {item.duration}</span></p></div>
         </Link>
       </article>)}</div> : <section className={s.state}><h2>No plans in this corner yet.</h2><p>Try a different area, category, or search. These are sample listings, so the collection is small.</p><button className={s.primary} onClick={() => demo.setDiscovery({ category: "All", area: "All Kochi", query: "" })}>Clear filters →</button></section>}
-      <section className={s.chatInvite}><span className={s.chatMark} aria-hidden="true">e.</span><div><h2>More of a “you decide” person?</h2><p>Tell Chat your mood. We’ll take it one question at a time.</p></div><Link className={s.primary} href="/">Let’s make a plan <span aria-hidden="true">↗</span></Link></section>
+      <section className={s.chatInvite}><span className={s.chatMark}><Photo id="water" sizes="48px" /></span><div><h2>More of a “you decide” person?</h2><p>Tell Chat your mood. Make a plan in your own words.</p></div><Link className={s.primary} href="/">Let’s make a plan <span aria-hidden="true">↗</span></Link></section>
     </>}
   </main>;
 }
