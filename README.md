@@ -527,3 +527,12 @@ providers remain deferred. No completed financial remedy is claimed.
 Step 10: Done when: ops can resolve a failed booking end to end.
 This is demonstrated for failures without unresolved financial/delivery work; paid
 failures remain explicitly unresolved pending an approved financial resolution flow.
+
+## Step 11: local hardening
+
+CI now audits locked installed Python dependencies with `pip-audit`, verifies a
+logical backup/restore on disposable PostgreSQL, and runs a bounded localhost load
+smoke test. Existing quality gates remain intact. See [the pre-launch checklist](docs/PRELAUNCH.md)
+for commands, security review, consent/deletion gaps, staging/monitoring recommendations
+and remaining launch gates. No cloud service, telemetry, deletion policy or live
+integration is enabled. Completing local checks does not establish production readiness.

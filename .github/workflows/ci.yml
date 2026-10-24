@@ -25,6 +25,9 @@ jobs:
       - name: Install locked dependencies
         working-directory: backend
         run: uv sync --frozen
+      - name: Audit locked installed dependencies
+        working-directory: backend
+        run: uv run --frozen pip-audit --strict --progress-spinner off
       - name: Ruff
         working-directory: backend
         run: |
@@ -52,12 +55,18 @@ jobs:
       - name: Tests
         working-directory: backend
         run: uv run --frozen pytest
+      - name: Verify disposable backup and restore
+        working-directory: backend
+        run: uv run --frozen python -m tools.recovery --project experience-ci
       - name: Build Docker image
         run: docker compose --env-file /dev/null -f infra/compose.yml build
       - name: Verify container health
         run: |
           docker compose --env-file /dev/null -f infra/compose.yml up -d --wait --wait-timeout 60
           python -c "import json, urllib.request; r = urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5); assert r.status == 200 and json.load(r) == {'status': 'ok'}"
+      - name: Local load smoke
+        working-directory: backend
+        run: uv run --frozen python -m tools.load_smoke
       - name: Stop disposable containers
         if: always()
         run: docker compose --env-file /dev/null -f infra/compose.yml down --volumes

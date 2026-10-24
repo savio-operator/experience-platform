@@ -50,6 +50,7 @@ Done when: ops can resolve a failed booking end to end.
 
 ## Step 11: Hardening
 Security checklist, error tracking, alerts, backups and restore test, load smoke test, staging environment, DPDP consent and deletion flows.
+Approved Step 11 scope: implement local dependency scanning, disposable recovery verification and load smoke checks; review security and document staging/monitoring recommendations and unresolved consent/deletion decisions. No provisioning, live integrations or invented policies. See PRELAUNCH.md for outstanding launch gates; local verification does not establish production readiness.
 Done when: pre-launch checklist is complete.
 
 ## Step 12: Pilot
