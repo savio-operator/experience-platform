@@ -16,3 +16,13 @@ presented as a photograph of Kochi. All other images are representative activity
 
 The source pages identified each selected image as free to use under the linked
 source license when selected. Credits are available in the application footer.
+
+## Offer carousel reference artwork
+
+Retrieved 24 October 2026 for the local demo. All three compositions are
+1080 × 1920 WebP images. These are references, not verified inventory or
+partnerships. No artwork reuse licence or brand endorsement is claimed.
+
+- `public/images/offers/boat.webp`: [boAt homepage](https://www.boat-lifestyle.com/), [original artwork](https://www.boat-lifestyle.com/cdn/shop/files/mobile_Landing_page_banner_LIVE_NW.png?v=1792556203). Original 1080 × 720 artwork preserved without cropping in a portrait frame. Dates on artwork: 21–25 October; current pricing and eligibility require verification.
+- `public/images/offers/honda.webp`: [Aryabhangy Honda, Kochi-area dealer](https://aryabhangymotors.com/offers.php), [original artwork](https://aryabhangymotors.com/images/VEHICLES/Offer-6.jpg). Original 2000 × 2000 poster preserved without cropping. No visible validity date; prices and availability are unverified.
+- `public/images/offers/federal-bank.webp`: original adapted layout based on [Weekends With Federal](https://www.federal.bank.in/weekends-with-federal), using the representative dining photo credited above. The bank's artwork download was blocked. Published dining minimum and card-specific savings caps are reproduced with qualification; current validity and Kochi restaurant eligibility remain unverified. This is not official bank artwork.
