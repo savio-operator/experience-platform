@@ -1,0 +1,88 @@
+.planner { max-width: 800px; margin: 0 auto; padding: 4px 0 24px; }
+.intro { text-align: center; margin-bottom: 32px; }
+.symbol { font-size: 36px; color: var(--accent); line-height: 1; margin-bottom: 16px; }
+.eyebrow { font-size: 9px; letter-spacing: 2px; font-weight: 650; color: var(--muted); }
+.intro h1 { font-size: clamp(36px, 5vw, 60px); font-weight: 500; letter-spacing: -2.5px; margin: 16px 0; line-height: 1.08; text-wrap: balance; }
+.intro h1 em { font-family: Georgia, serif; color: var(--accent); font-weight: 400; }
+.intro > p:last-child { color: var(--muted); font-size: 14px; margin-bottom: 0; text-wrap: balance; }
+.chat { border: 1px solid var(--line); background: var(--surface); border-radius: 24px; box-shadow: 0 8px 32px #213f3406; overflow: hidden; }
+.chatHeader { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px; border-bottom: 1px solid var(--line); }
+.identity { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
+.avatar { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--soft); font-size: 22px; font-weight: 650; }
+.identityHint { display: block; color: var(--muted); font-size: 10px; font-weight: 400; margin-top: 2px; }
+.demoBadge { font-size: 10px; color: var(--accent-ink); border: 1px solid var(--line); border-radius: 20px; padding: 5px 10px; white-space: nowrap; }
+.thread { max-height: min(460px, 50dvh); overflow-y: auto; overscroll-behavior: contain; padding: 24px; display: flex; flex-direction: column; gap: 20px; scrollbar-width: thin; scrollbar-color: #c6d2b9 transparent; }
+.assistant, .user { max-width: 88%; overflow-wrap: anywhere; }
+.assistant { align-self: flex-start; }
+.user { align-self: flex-end; background: var(--soft); border-radius: 18px 18px 4px 18px; padding: 12px 16px; }
+.speaker { display: block; font-size: 10px; font-weight: 650; color: var(--muted); margin-bottom: 7px; }
+.assistant p, .user p { margin: 0; font-size: 14px; line-height: 1.75; white-space: pre-wrap; }
+.composeArea { padding: 0 24px 20px; }
+.composer { padding: 12px 14px 10px; background: var(--soft); border: 1px solid var(--line); border-radius: 16px; }
+.composer:focus-within { border-color: #758b60; box-shadow: 0 0 0 2px #758b6014; }
+.composer textarea { display: block; width: 100%; min-height: 54px; max-height: 180px; resize: vertical; border: none; background: transparent; color: var(--ink); font-size: 16px; line-height: 1.6; padding: 2px; border-radius: 2px; }
+.composer textarea:focus { outline: none; }
+.composer textarea::placeholder { color: var(--muted); }
+.composerBottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; }
+.composerBottom > span { font-size: 10px; color: var(--muted); }
+.send { border: none; border-radius: 50%; width: 44px; min-width: 44px; height: 44px; background: var(--green); color: white; font-size: 25px; line-height: 1; }
+.send:disabled { opacity: 1; color: var(--muted); background: var(--soft); }
+.suggestionLabel { display: block; font-size: 10px; color: var(--muted); margin: 15px 0 8px; }
+.suggestions > div { display: flex; flex-wrap: wrap; gap: 6px 10px; }
+.suggestion { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; border: 1px solid var(--line); background: transparent; border-radius: 12px; padding: 8px 12px; font-size: 12px; color: var(--accent-ink); text-align: left; line-height: 1.5; }
+.suggestionArrow { color: var(--accent); margin-left: auto; }
+.send, .suggestion, .finished button { user-select: none; -webkit-user-select: none; }
+.send:not(:disabled):active, .suggestion:active { transform: scale(.97); }
+.suggestions:has(> div:empty) { display: none; }
+.error { color: var(--error); font-size: 12px; margin: 8px 0; }
+.error:empty { display: none; }
+.disclosure { color: var(--muted); font-size: 11px; text-align: center; margin: 16px 0 6px; text-wrap: balance; }
+.guided { display: block; width: fit-content; margin: auto; padding: 12px; min-height: 44px; color: var(--muted); font-size: 12px; text-align: center; }
+.finished { padding: 8px 24px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.review { display: inline-flex; align-items: center; gap: 18px; border-radius: 12px; background: var(--green); color: white; padding: 12px 18px; text-decoration: none; font-size: 14px; min-height: 44px; }
+.finished button { background: none; border: none; color: var(--muted); font-size: 12px; text-decoration: underline; text-underline-offset: 4px; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.inspiration { margin: 18px 24px 0; display: flex; align-items: center; gap: 12px; background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+.inspirationPhoto { position: relative; flex: 0 0 60px; height: 65px; border-radius: 7px; overflow: hidden; }
+.inspiration > div:nth-child(2) { flex: 1; min-width: 0; }
+.inspiration span { display: block; font-size: 8px; letter-spacing: 1px; color: var(--accent-ink); margin-bottom: 4px; }
+.inspiration a { display: flex; align-items: center; min-height: 44px; font-size: 13px; font-weight: 600; line-height: 1.4; padding: 3px 0; }
+.inspiration small { display: block; font-size: 10px; color: var(--muted); margin-top: 3px; }
+.inspiration button { width: 44px; flex: 0 0 44px; border: none; background: transparent; color: var(--ink); font-size: 25px; }
+.comingSoon { margin-left: auto; font-size: 9px; white-space: nowrap; }
+.suggestion:disabled { opacity: .7; }
+.discoveryTeaser { border-top: 1px solid var(--line); margin-top: 32px; padding-top: 22px; }
+.teaserHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
+.teaserHeading h2 { font-size: 19px; font-weight: 500; letter-spacing: -.4px; margin: 0; }
+.teaserHeading > a { display: inline-flex; align-items: center; min-height: 44px; font-size: 11px; color: var(--muted); }
+.teaserGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.teaserCard { text-decoration: none; min-width: 0; border-radius: 12px; }
+.teaserPhoto { position: relative; aspect-ratio: 1.45; overflow: hidden; border-radius: 12px; margin-bottom: 12px; }
+.teaserCard > span { display: block; font-size: 9px; color: var(--muted); margin-bottom: 6px; }
+.teaserCard strong { display: block; font-size: 16px; font-weight: 550; line-height: 1.3; letter-spacing: -.4px; }
+.teaserCard small { display: block; font-size: 9px; color: var(--muted); margin-top: 7px; }
+@media (hover: hover) and (pointer: fine) { .suggestion:hover { border-color: #9cab8a; background: var(--soft); } .send:not(:disabled):hover { background: var(--button-hover); } }
+@media (max-width: 600px) {
+  .planner { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .intro { margin-bottom: 24px; }
+  .intro h1 { font-size: 39px; letter-spacing: -1.6px; }
+  .intro > p:last-child { font-size: 13px; }
+  .chat { border-radius: 18px; }
+  .chatHeader { padding: 14px; }
+  .identityHint { max-width: 150px; font-size: 9px; }
+  .thread { padding: 18px 16px; gap: 18px; max-height: 42dvh; }
+  .assistant, .user { max-width: 94%; }
+  .composeArea { padding: 0 12px 14px; }
+  .composerBottom > span { font-size: 9px; max-width: 170px; }
+  .suggestion { width: 100%; padding: 10px; }
+  .finished { padding: 8px 16px 18px; }
+  .intro h1 { font-size: 35px; }
+  .intro { margin-bottom: 20px; }
+  .symbol { font-size: 26px; margin-bottom: 12px; }
+  .inspiration { margin: 14px 12px 0; }
+  .teaserGrid { gap: 10px; }
+  .teaserPhoto { aspect-ratio: .9; border-radius: 9px; }
+  .teaserCard strong { font-size: 13px; letter-spacing: -.2px; }
+  .teaserCard small { font-size: 8px; }
+  .teaserHeading h2 { font-size: 17px; }
+}

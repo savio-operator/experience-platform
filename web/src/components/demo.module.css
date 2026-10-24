@@ -1,0 +1,192 @@
+.main { max-width: 1240px; margin: auto; padding: 16px 48px 32px; min-height: 65vh; }
+.main:focus { outline: none; }
+.utilityBar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; min-height: 50px; }
+.utilityNote { font-size: 9px; letter-spacing: 1.6px; font-weight: 650; color: var(--muted); }
+.back { font-size: 13px; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; gap: 8px; }
+.previewLabel { display: flex; align-items: center; gap: 9px; font-size: 11px; color: var(--muted); }
+.previewLabel select { border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--ink); padding: 0 8px; font-size: 16px; }
+.hero { display: grid; grid-template-columns: 1fr .95fr; gap: 64px; align-items: center; padding: 20px 0 48px; }
+.eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.smallLine { width: 25px; height: 1px; background: var(--green); }
+.hero h1 { font-size: clamp(48px, 5.8vw, 77px); font-weight: 550; line-height: 1.02; letter-spacing: -4px; margin-bottom: 26px; position: relative; }
+.softWord { font-style: italic; color: #5c7753; font-weight: 400; }
+.spark { font-size: 49px; display: inline-block; padding-left: 15px; vertical-align: top; color: #8c9b5d; }
+.heroCopy { color: var(--muted); font-size: 15px; line-height: 1.7; }
+.heroNote { display: flex; align-items: center; gap: 12px; margin-top: 30px; font-size: 11px; line-height: 1.6; color: var(--muted); }
+.heroNote strong { font-weight: 500; color: var(--ink); }
+.noteIcon { border: 1px solid #aebba5; border-radius: 50%; height: 36px; width: 36px; display: grid; place-items: center; font-size: 19px; }
+.heroArt { position: relative; transform: rotate(2deg); padding: 10px; border: 1px solid var(--line); background: var(--soft); border-radius: 180px 180px 18px 18px; }
+.heroArt .scene { border-radius: 170px 170px 12px 12px; height: 415px; }
+.postcard { position: absolute; bottom: 62px; left: -28px; transform: rotate(-9deg); background: #e6eba9; color: #364a31; padding: 16px 24px; line-height: 1; font-size: 27px; letter-spacing: -1.5px; box-shadow: 0 3px 0 #263a2312; }
+.postcard em { font-style: italic; }
+.artTag { position: absolute; bottom: 23px; right: 22px; font-size: 8px; letter-spacing: 1.5px; color: #e6ecd5; }
+.sectionLabel { display: flex; align-items: center; justify-content: space-between; margin: 18px 0 20px; gap: 16px; }
+.sectionLabel h2 { margin: 0; font-size: 20px; letter-spacing: -.5px; font-weight: 550; }
+.sectionLabel > span { font-size: 8px; letter-spacing: 1.4px; color: var(--muted); }
+.intentGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.intent { text-align: left; background: transparent; border: 1px solid var(--line); border-radius: 14px; min-height: 168px; padding: 20px; position: relative; display: flex; flex-direction: column; align-items: flex-start; }
+.intent:disabled { opacity: 1; background: var(--soft); color: var(--muted); }
+.activeIntent { background: var(--soft); border-color: #c5d3a6; }
+.intentIcon { width: 33px; height: 33px; border: 1px solid #b6c59c; border-radius: 50%; display: grid; place-items: center; font-size: 21px; margin-bottom: 16px; }
+.intentText strong { display: block; font-size: 16px; letter-spacing: -.4px; font-weight: 600; margin-bottom: 6px; }
+.intentText > span { display: block; max-width: 230px; font-size: 11px; line-height: 1.5; }
+.intentEnd { position: absolute; right: 16px; top: 22px; font-size: 9px; }
+.intentEnd > span { font-size: 24px; }
+.steps { display: flex; justify-content: center; gap: 28px; margin: 0 0 42px; }
+.steps > span { color: var(--muted); font-size: 11px; display: flex; align-items: center; gap: 8px; }
+.steps i { font-style: normal; border: 1px solid var(--line); border-radius: 50%; height: 23px; width: 23px; display: grid; place-items: center; font-size: 10px; }
+.steps .currentStep { color: var(--ink); font-weight: 650; }
+.currentStep i { background: var(--green); border-color: var(--green); color: white; }
+.narrow { max-width: 640px; margin: 0 auto; }
+.heading { margin-bottom: 30px; }
+.heading h1 { font-size: clamp(32px, 4vw, 48px); font-weight: 550; letter-spacing: -1.8px; margin: 0 0 16px; max-width: 790px; }
+.heading .eyebrow { margin-bottom: 15px; }
+.subtitle { color: var(--muted); font-size: 14px; line-height: 1.7; max-width: 690px; margin-bottom: 0; }
+.questionTop { display: flex; justify-content: space-between; font-size: 9px; font-weight: 650; letter-spacing: 1.5px; color: var(--muted); margin: 0 0 12px; }
+.progress { height: 3px; background: var(--soft); margin-bottom: 38px; border-radius: 3px; overflow: hidden; }
+.progress span { display: block; height: 100%; background: #879b5b; }
+.choices { margin: 0; padding: 0; border: 0; display: grid; gap: 10px; }
+.choice { position: relative; cursor: pointer; display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 17px 20px; min-height: 62px; border: 1px solid var(--line); border-radius: 12px; font-size: 15px; background: var(--surface); }
+.choice input { position: absolute; width: 1px; height: 1px; min-height: 0; opacity: 0; }
+.choice:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 3px; }
+.chosen { background: var(--soft); border-color: #7b9060; }
+.radio { flex: 0 0 auto; width: 20px; height: 20px; border: 1px solid #a5b494; border-radius: 50%; display: grid; place-items: center; font-size: 12px; }
+.formFooter { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 28px; }
+.formFooter > span { font-size: 11px; color: var(--muted); }
+.primary, .secondary { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 24px; padding: 13px 23px; border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 13px; border: 1px solid var(--green); }
+.primary { background: var(--green); color: #fffef4; }
+.secondary { background: transparent; color: var(--ink); border-color: var(--line); }
+.primary > span, .secondary > span { font-size: 20px; line-height: 1; }
+.inputLabel { display: block; font-weight: 600; font-size: 13px; margin: 0 0 10px; }
+.moneyInput { display: flex; align-items: center; gap: 12px; padding: 15px 20px; border: 1px solid #aaba99; background: var(--surface); border-radius: 12px; }
+.moneyInput > span { font-size: 27px; }
+.moneyInput input { width: 100%; min-width: 0; border: 0; background: transparent; font-size: 25px; color: var(--ink); }
+.moneyInput input::placeholder { color: var(--muted); }
+.textarea { width: 100%; resize: vertical; border: 1px solid #aaba99; background: var(--surface); border-radius: 12px; padding: 16px; color: var(--ink); min-height: 160px; }
+.errorMessage { color: var(--error); padding: 10px 0; margin: 4px 0 0; font-size: 13px; }
+.finePrint { font-size: 11px; line-height: 1.6; color: var(--muted); margin: 15px 0 0; }
+.briefCard { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 8px 28px; }
+.briefCard > div { position: relative; border-bottom: 1px solid var(--line); padding: 25px 0 25px 40px; }
+.briefCard > div:last-child { border-bottom: 0; }
+.briefNumber { position: absolute; left: 0; top: 27px; font-size: 10px; color: var(--accent); }
+.briefCard h2 { font-size: 21px; font-weight: 550; margin-bottom: 12px; }
+.briefCard p { font-size: 15px; }
+.briefCard dl, .detailFacts { display: grid; grid-template-columns: 105px minmax(0, 1fr); gap: 10px 14px; font-size: 13px; margin: 0; }
+.briefCard dt, .detailFacts dt { color: var(--muted); }
+.briefCard dd, .detailFacts dd { margin: 0; overflow-wrap: anywhere; }
+.actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 25px; }
+.demoNotice { border: 1px solid var(--line); background: var(--soft); border-radius: 10px; padding: 13px 17px; font-size: 12px; line-height: 1.6; color: var(--accent-ink); margin: 0 0 24px; }
+.optionGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.optionCard { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+.cardArt { position: relative; }
+.optionNumber { color: #213f34; position: absolute; top: 16px; left: 16px; background: #fffef7e6; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 10px; }
+.optionBody { padding: 22px; display: flex; flex: 1; flex-direction: column; align-items: flex-start; }
+.cardMeta { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.cardMeta > span { color: var(--muted); }
+.optionBody h2 { font-size: 24px; font-weight: 550; letter-spacing: -.8px; margin-bottom: 18px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; background: var(--soft); border-radius: 5px; font-size: 10px; color: var(--accent-ink); }
+.badge > span { font-size: 6px; }
+.unavailable { background: var(--warning-bg); color: var(--warning-ink); }
+.inclusions { list-style: none; padding: 0; margin: 20px 0; font-size: 12px; line-height: 1.7; }
+.inclusions li { padding-left: 18px; position: relative; margin-bottom: 6px; }
+.inclusions li::before { content: "↗"; position: absolute; left: 0; color: var(--accent); }
+.optionFacts { display: grid; gap: 3px; font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+.terms { font-size: 11px; line-height: 1.65; color: var(--muted); }
+.priceRow { border-top: 1px solid var(--line); padding-top: 16px; margin-top: auto; display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.priceRow strong { display: block; font-size: 24px; font-weight: 550; letter-spacing: -.8px; font-variant-numeric: tabular-nums; }
+.priceRow div > span { font-size: 10px; color: var(--muted); }
+.roundLink { min-width: 44px; min-height: 44px; border: 1px solid var(--line); border-radius: 50%; display: grid; place-items: center; text-decoration: none; font-size: 24px; }
+.textLink { margin-top: 24px; display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; }
+.detail { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.detail .scene { height: 480px; border-radius: 22px; }
+.detail .heading h1 { font-size: 40px; }
+.detailPrice { font-size: 32px; font-weight: 550; letter-spacing: -1px; margin: 22px 0; }
+.detailPrice span { font-size: 12px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+.detailFacts { padding: 20px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 25px; }
+.smallTitle { font-size: 18px; font-weight: 550; }
+.termsBox { background: var(--soft); padding: 17px; border-radius: 10px; }
+.termsBox h3 { font-size: 12px; margin: 0 0 8px; }
+.termsBox p { font-size: 12px; color: var(--muted); margin: 0; }
+.checkoutCard { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); display: grid; grid-template-columns: 160px 1fr; margin-bottom: 22px; }
+.checkoutCard .scene { height: 100%; min-height: 160px; }
+.checkoutCard > div:last-child { padding: 22px; }
+.checkoutCard h2 { font-size: 22px; font-weight: 550; margin-bottom: 10px; }
+.checkoutCard p { color: var(--muted); font-size: 12px; margin-bottom: 0; }
+.checkoutCard .eyebrow { font-size: 8px; margin-bottom: 10px; }
+.total { display: flex; justify-content: space-between; align-items: center; margin: 25px 0; gap: 16px; }
+.total strong { font-size: 30px; font-weight: 550; font-variant-numeric: tabular-nums; }
+.total > span { font-size: 14px; }
+.fullWidth { width: 100%; }
+.pendingIcon { width: 68px; height: 68px; display: grid; place-items: center; font-size: 32px; background: var(--soft); border-radius: 50%; margin-bottom: 24px; }
+.requestSummary { display: grid; gap: 6px; padding: 22px; background: var(--soft); border-radius: 14px; font-size: 13px; }
+.requestSummary span { color: var(--muted); font-size: 12px; }
+.timeline { list-style: none; padding: 0; margin: 35px 0; }
+.timeline li { position: relative; display: flex; gap: 18px; min-height: 95px; }
+.timeline li:not(:last-child)::after { content: ""; width: 1px; background: var(--line); position: absolute; left: 15px; top: 31px; bottom: 0; }
+.timelineDot { flex: 0 0 31px; height: 31px; display: grid; place-items: center; border: 1px solid #b4c49f; border-radius: 50%; font-size: 14px; }
+.currentEvent .timelineDot { background: var(--green); color: white; font-size: 29px; }
+.timeline h2 { font-size: 15px; font-weight: 600; margin: 5px 0 8px; }
+.timeline p { font-size: 12px; color: var(--muted); padding-bottom: 18px; }
+.statePanel { max-width: 600px; margin: 48px auto; padding: 40px 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); text-align: center; }
+.statePanel h2 { font-size: 29px; font-weight: 550; letter-spacing: -1px; }
+.statePanel p { color: var(--muted); font-size: 14px; margin-bottom: 26px; }
+.stateIcon { display: grid; place-items: center; width: 58px; height: 58px; margin: 0 auto 24px; background: var(--soft); border-radius: 50%; font-size: 28px; }
+.skeleton { display: grid; gap: 10px; margin: 0 auto 26px; max-width: 300px; }
+.skeleton span { height: 14px; border-radius: 5px; background: var(--soft); }
+.skeleton span:last-child { width: 60%; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.scene { position: relative; overflow: hidden; height: 210px; background: #d3dcbc; isolation: isolate; }
+.sceneLarge { height: 420px; }
+@media (hover:hover) and (pointer:fine) { .activeIntent:hover { background: var(--soft); } .primary:hover { background: var(--button-hover); } .roundLink:hover, .secondary:hover { background: var(--soft); } .choice:hover { border-color: #8f9e7f; } }
+@media(max-width: 950px) { .hero { gap: 32px; } .hero h1 { font-size: 58px; } .heroArt .scene { height: 360px; } .optionGrid { gap: 12px; } .optionBody { padding: 16px; } .optionBody h2 { font-size: 21px; } .detail { gap: 25px; } }
+@media(max-width: 700px) {
+  .main { padding: 10px 20px 24px; }
+  .utilityBar { margin-bottom: 15px; }
+  .utilityNote { font-size: 7px; letter-spacing: 1px; }
+  .previewLabel { font-size: 10px; gap: 5px; }
+  .hero { grid-template-columns: 1fr; gap: 28px; padding: 10px 0 25px; }
+  .hero h1 { font-size: clamp(45px, 11vw, 65px); letter-spacing: -2.8px; }
+  .heroCopy { font-size: 14px; }
+  .heroArt { width: 88%; max-width: 380px; margin: 0 auto; border-radius: 150px 150px 15px 15px; }
+  .heroArt .scene { height: 245px; }
+  .postcard { font-size: 23px; bottom: 40px; left: -16px; }
+  .heroNote { margin-top: 20px; }
+  .hero .eyebrow { font-size: 8px; letter-spacing: 1.5px; }
+  .sectionLabel { margin-top: 15px; }
+  .sectionLabel > span { display: none; }
+  .intentGrid { grid-template-columns: 1fr; gap: 10px; }
+  .intent { min-height: 120px; padding: 20px 18px 18px 72px; justify-content: center; }
+  .intentIcon { position: absolute; left: 18px; top: 23px; }
+  .intentText strong { font-size: 15px; }
+  .intentText > span { padding-right: 12px; }
+  .intentEnd { right: 14px; top: 12px; font-size: 8px; }
+  .steps { gap: 13px; justify-content: space-between; margin-bottom: 28px; }
+  .steps > span { font-size: 9px; gap: 4px; flex-direction: column; }
+  .steps i { width: 21px; height: 21px; }
+  .heading h1 { font-size: 34px; letter-spacing: -1.3px; }
+  .heading { margin-bottom: 23px; }
+  .questionTop { font-size: 8px; }
+  .progress { margin-bottom: 28px; }
+  .choice { padding: 15px; font-size: 14px; }
+  .formFooter { align-items: flex-start; }
+  .formFooter > span { max-width: 100px; padding-top: 12px; }
+  .primary, .secondary { gap: 13px; padding: 12px 17px; }
+  .briefCard { padding: 2px 18px; }
+  .briefCard > div { padding-left: 28px; }
+  .briefCard dl { grid-template-columns: 1fr; gap: 3px; }
+  .briefCard dd { margin-bottom: 10px; }
+  .optionGrid { grid-template-columns: 1fr; gap: 22px; }
+  .optionBody { padding: 22px; }
+  .optionBody h2 { font-size: 27px; }
+  .scene { height: 220px; }
+  .detail { grid-template-columns: 1fr; }
+  .detail .scene { height: 290px; }
+  .detail .heading h1 { font-size: 35px; }
+  .checkoutCard { grid-template-columns: 100px 1fr; }
+  .checkoutCard > div:last-child { padding: 16px; }
+  .checkoutCard h2 { font-size: 19px; }
+  .checkoutCard .artCaption { display: none; }
+  .moneyInput input { font-size: 22px; }
+  .statePanel { margin: 25px auto; padding: 30px 18px; }
+  .statePanel h2 { font-size: 26px; }
+}

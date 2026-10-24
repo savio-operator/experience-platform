@@ -1,0 +1,22 @@
+* { box-sizing: border-box; }
+:root { color-scheme: light; --paper: #f8f7f2; --ink: #213f34; --muted: #657169; --line: #dce1d6; --green: #2b513f; --lime: #dce9a7; --radius: 20px; --surface: #fffefb; --soft: #eef0e3; --accent-ink: #516044; --accent: #789050; --error: #934022; --warning-bg: #f1e6dc; --warning-ink: #844a2c; --focus: #a54b25; --button-hover: #3b624e; }
+:root[data-theme="dark"] { color-scheme: dark; --paper: #141d19; --ink: #e4eddf; --muted: #acb9ac; --line: #3d4e42; --green: #326247; --lime: #c2d791; --surface: #1c2922; --soft: #29392d; --accent-ink: #cad9b6; --accent: #aec883; --error: #ffb69b; --warning-bg: #453328; --warning-ink: #efbd9f; --focus: #dfb58a; --button-hover: #3d7354; }
+html { background: var(--paper); -webkit-text-size-adjust: 100%; scroll-padding-top: 190px; }
+body { margin: 0; color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 16px; line-height: 1.5; -webkit-tap-highlight-color: transparent; }
+button, input, select, textarea { font: inherit; }
+input, select, textarea { font-size: 16px; }
+button, a, input, select, textarea { touch-action: manipulation; }
+a { color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+button, input, select { min-height: 44px; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+button:disabled { opacity: .55; }
+button { transition: background-color 100ms ease-out; }
+button:not(:disabled):active { filter: brightness(.93); }
+h1, h2, h3, p { margin-top: 0; }
+h1, h2, h3 { line-height: 1.1; }
+a { text-underline-offset: 4px; }
+.skip { position: fixed; top: -100px; left: 16px; z-index: 50; padding: 12px; background: var(--surface); }
+.skip:focus { top: 40px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
