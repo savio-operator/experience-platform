@@ -1,11 +1,14 @@
+from uuid import UUID
+
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import text
+from sqlalchemy import insert, select, text
 
 from app.core.config import load_settings
 from app.core.db import make_engine
 from app.main import create_app
 from app.modules.identity.delivery import get_delivery
+from app.modules.identity.models import roles, user_roles
 
 
 @pytest.fixture(scope="session")
@@ -32,7 +35,7 @@ def db(engine):
         connection.execute(
             text(
                 "TRUNCATE sessions, user_roles, consents, customers, users, "
-                "otp_challenges, auth_limits, services, vendors"
+                "otp_challenges, auth_limits, holds, inventory_slots, services, vendors"
             )
         )
     return engine
@@ -87,3 +90,16 @@ def login(client, request_code):
         return client.get("/auth/me").json()
 
     return sign_in
+
+
+@pytest.fixture
+def ops(client, login, db):
+    actor = login("ops@example.com")
+    with db.begin() as connection:
+        role_id = connection.scalar(
+            select(roles.c.id).where(roles.c.name == "ops_admin")
+        )
+        connection.execute(
+            insert(user_roles).values(user_id=UUID(actor["id"]), role_id=role_id)
+        )
+    return client, UUID(actor["id"])

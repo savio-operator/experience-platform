@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.auth import router
+from app.api.inventory import router as inventory_router
 from app.api.ops import router as ops_router
 from app.core.config import load_settings
 from app.core.db import make_engine
@@ -36,6 +37,7 @@ def create_app():
     app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
     app.include_router(router)
     app.include_router(ops_router)
+    app.include_router(inventory_router)
 
     @app.exception_handler(RequestValidationError)
     async def invalid_request(request, error):

@@ -15,19 +15,6 @@ from app.modules.vendors import service as vendor_service
 from app.modules.vendors.models import vendors
 
 
-@pytest.fixture
-def ops(client, login, db):
-    actor = login("ops@example.com")
-    with db.begin() as connection:
-        role_id = connection.scalar(
-            select(roles.c.id).where(roles.c.name == "ops_admin")
-        )
-        connection.execute(
-            insert(user_roles).values(user_id=UUID(actor["id"]), role_id=role_id)
-        )
-    return client, UUID(actor["id"])
-
-
 def test_ops_create_edit_and_audit(ops, db, caplog):
     client, actor_id = ops
     response = client.post(

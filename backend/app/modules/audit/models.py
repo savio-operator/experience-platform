@@ -25,7 +25,12 @@ audit_events = Table(
         "created_at", DateTime(timezone=True), nullable=False, server_default=func.now()
     ),
     CheckConstraint(
-        "resource_type IN ('vendor', 'service')", name="audit_resource_type"
+        "resource_type IN ('vendor', 'service', 'inventory_slot', 'hold')",
+        name="audit_resource_type",
     ),
-    CheckConstraint("action IN ('created', 'updated')", name="audit_action"),
+    CheckConstraint(
+        "action IN ('created', 'updated', 'unknown', 'unverified', 'verified', "
+        "'held', 'unavailable', 'expired', 'released')",
+        name="audit_action",
+    ),
 )

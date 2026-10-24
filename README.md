@@ -186,3 +186,36 @@ are supplied by test fixtures only; no automatic privileged account or login byp
 is added. Manual authentication still awaits live email delivery.
 
 Step 2: Done when: ops can create a vendor and a service, customers cannot.
+
+
+## Step 3: inventory and holds
+
+Ops-only routes under `/ops/inventory` reuse existing authentication and throttling:
+
+- `POST /slots`: service UUID, timezone-aware `starts_at`, `ends_at`, `release_at`,
+  and positive integer `capacity`. New slots start UNKNOWN. Windows for the same
+  service cannot overlap; times and capacity are immutable in this step.
+- `GET /slots/{id}`: current state, held quantity and available quantity.
+- `PATCH /slots/{id}/availability`: `state` UNKNOWN, AVAILABLE_UNVERIFIED,
+  AVAILABLE_VERIFIED or UNAVAILABLE. Verification requires `verified_until`.
+- `POST /slots/{id}/holds`: positive `quantity`, `expires_at`, UUID
+  `idempotency_key`. Repeating the same request returns the original hold;
+  reusing its key with different values or another actor returns 409.
+- `POST /holds/{id}/release` and `POST /slots/{id}/refresh`: send `{}`.
+
+Only fresh verified capacity can be held. Hold expiry cannot exceed verification
+or release deadlines. PostgreSQL row locks serialize capacity checks and updates;
+mutation and audit records commit together. Expired holds stop consuming capacity
+immediately in reads and allocation; a later mutation or explicit refresh persists
+expiry events. No background worker is required. Release is idempotent. Booking
+states are reserved vocabulary, not implemented booking operations.
+
+Apply migration `0003` explicitly. Its downgrade removes inventory tables but keeps
+the expanded audit vocabulary to preserve historical audit events. Capacity is
+independent per service: shared physical resources across services are not modeled.
+No real vendor agreement exists yet. The approved exception permits local/CI
+implementation only; real inventory requires agreed capacity, freshness and release
+terms and validation of shared-resource assumptions before pilot use. All deadlines
+are explicit ops inputs; no vendor availability or terms are inferred.
+
+Step 3: Done when: concurrent hold tests prove no double-booking.

@@ -2,7 +2,7 @@
 
 Rule: implement and verify one step at a time. After completion, report actual results and automatically inspect and prepare a concise plan for the next numbered step. Present that plan and wait for authorization before implementation. Do not prebuild later steps. If the roadmap is complete, report that instead. All gates below remain in force.
 
-GATE: Do not start Step 3 until at least one real vendor has agreed to a pilot (even verbally). Steps 0-2 are safe either way.
+GATE: A real vendor pilot agreement is required before using real inventory or launching the pilot. The user explicitly authorized local/CI Step 3 implementation before that agreement; no vendor has agreed yet. This exception does not authorize deployment or imply vendor availability.
 
 ## Step 0: Foundation
 Repo, folders per ARCHITECTURE.md, Docker, .env handling, CI (lint, tests), config module, health endpoint, structured logging.
