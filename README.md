@@ -213,9 +213,39 @@ states are reserved vocabulary, not implemented booking operations.
 Apply migration `0003` explicitly. Its downgrade removes inventory tables but keeps
 the expanded audit vocabulary to preserve historical audit events. Capacity is
 independent per service: shared physical resources across services are not modeled.
-No real vendor agreement exists yet. The approved exception permits local/CI
-implementation only; real inventory requires agreed capacity, freshness and release
+No real vendor agreement exists yet. Development remains local/CI only; real inventory requires agreed capacity, freshness and release
 terms and validation of shared-resource assumptions before pilot use. All deadlines
 are explicit ops inputs; no vendor availability or terms are inferred.
 
 Step 3: Done when: concurrent hold tests prove no double-booking.
+
+
+## Step 4: intent parsing (live provider disabled)
+
+`POST /intents/parse` accepts `{"text": "date tonight, Rs 3000, no alcohol"}`
+with an authenticated session and existing JSON/origin protections. It is limited
+to 10 attempts per user and 20 per IP per minute, in addition to session limits.
+The shipped adapter always returns 503 `AI provider disabled`. There is no live
+adapter, API-key lookup, paid call, or environment switch to enable one. Tests inject
+deterministic providers; they do not prove real-model extraction quality.
+
+The provider contract separates fixed instructions, untrusted text, and the output
+schema. Valid output contains nullable `kind` (now_or_tonight, date,
+birthday_or_surprise), `when_text`, `party_size`, `budget_paise`, and a bounded list
+of `constraints`. All fields are required in provider JSON; unspecified scalar
+values must be null. `missing_fields` identifies absent kind, time, party size and
+budget for clarification, not booking eligibility. Time wording stays unresolved;
+no dates, prices or availability are inferred. Constraints remain untrusted data.
+Schema checks prevent invalid structure, not all semantically incorrect extraction.
+
+Unknown fields, duplicate JSON keys, coerced types, invalid bounds, malformed or
+oversized responses are rejected with 502; provider failures/timeouts return 503.
+Calls have a five-second timeout and no automatic retries. No tools or database
+write capabilities are passed to providers. Requests/results are not persisted.
+Numeric input/output token counts and cost in INR paise are returned/logged with
+request ID when supplied authoritatively; unknown values stay null, never assumed
+zero. Raw text, outputs, credentials and exception details are not logged.
+No new dependencies or migrations are needed. Provider selection, live usage,
+verified pricing and real-model evaluation remain deferred pending authorization.
+
+Step 4: Done when: sample requests become valid structured intents; bad output is rejected.

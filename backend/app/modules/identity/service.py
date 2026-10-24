@@ -56,6 +56,8 @@ def throttle(engine, key, operation, ip, email=None):
             (f"send-minute:{email}", 1, 60),
             (f"send-hour:{email}", 5, 3600),
         ]
+    elif operation == "intent":
+        limits = [(f"intent-ip:{ip}", 20, 60), (f"intent-user:{email}", 10, 60)]
     elif operation == "verify":
         limits = [(f"verify-ip:{ip}", 30, 600)]
     else:
