@@ -2,10 +2,22 @@
 
 ## Working rules
 
--   Read PRD.md, ARCHITECTURE.md and PLAN.md before any task. Work on
-    ONE step of PLAN.md at a time. Do not touch other steps.
--   Before coding a step: restate it, list files you will change, list
-    assumptions, ask questions. Wait for my approval.
+-   Inspect relevant project rules, requirements and repository state before
+    each task; avoid rereading unchanged documents. Work on ONE roadmap step
+    at a time. Do not start the next step automatically.
+-   For an authorized implementation step, briefly state its objective and
+    implement related changes together. Make routine decisions autonomously
+    within the approved architecture; do not seek repeated plan approvals.
+-   Ask only about material architecture, product, security, cost or data
+    integrity decisions, genuine blockers, or destructive/production actions.
+-   Reuse existing code and dependencies. Run focused checks when useful, then
+    required final checks; fix failures and rerun affected checks. Do not repeat
+    successful checks without a reason. Commit completed work locally when
+    appropriate. Report actual results, acceptance criteria and limitations;
+    stop and ask whether to continue to the actual next step in PLAN.md.
+-   Never use Render credentials or perform Render account operations without
+    explicit authorization for the specific operation. No unapproved cloud
+    resources, costs, production changes or destructive Git operations.
 -   Make small, focused changes. Each step ends with relevant
     tests/checks passing and a short summary of what changed. Stop and
     wait.

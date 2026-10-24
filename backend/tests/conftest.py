@@ -32,7 +32,7 @@ def db(engine):
         connection.execute(
             text(
                 "TRUNCATE sessions, user_roles, consents, customers, users, "
-                "otp_challenges, auth_limits"
+                "otp_challenges, auth_limits, services, vendors"
             )
         )
     return engine

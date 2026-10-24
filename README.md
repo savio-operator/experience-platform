@@ -140,12 +140,45 @@ migrations, runs Ruff and pytest, builds Docker, and verifies container health.
 - After each step, verify its acceptance criteria with actual results, report
   changed files/checks/limitations, read the actual next step in `docs/PLAN.md`,
   and ask whether to inspect and plan it or do something else. Never start it
-  automatically. Planning approval is separate from implementation approval;
-  silence is not approval. On failure, report it and propose a fix. If the plan
+  automatically. Within an authorized implementation step, proceed autonomously
+  with routine coding, testing and fixes. Ask only about material decisions or
+  blockers; silence is not permission for another step or production operations. On failure, report it and propose a fix. If the plan
   is finished, say so and ask what to do next without inventing another step.
 
-The four original project documents remain unchanged in `docs/`.
+Project documents are in `docs/`; AIRULES records the approved autonomous workflow.
+Render keys and account operations require specific explicit authorization.
 
 Step 0: Done when: app runs in Docker, CI is green, no secrets in repo.
 
 Step 1: Done when: tests pass for auth, permissions and rate limits.
+
+
+## Step 2: ops-managed vendors and catalogue
+
+All four routes require the database-backed `ops_admin` role and retain existing
+session throttling, JSON/origin checks, and secret-safe errors:
+
+- `POST /ops/vendors`: required `name`; optional `contact_name`, `contact_email`,
+  `contact_phone`, `terms_notes`.
+- `PATCH /ops/vendors/{id}`: change supplied fields; nullable contact/notes fields
+  can be cleared explicitly. The name cannot be blank or null.
+- `POST /ops/services`: required `vendor_id` and `name`; optional `description`.
+- `PATCH /ops/services/{id}`: update name/description; vendor association is immutable.
+
+Create returns 201; update returns 200. Unknown fields/invalid input return 422;
+missing records return 404 after authorization. Names are limited to 200 characters,
+notes/descriptions to 4000. No-op updates do not generate an audit event. Names are
+not unique identifiers; UUIDs identify records. No deletion, listing, customer
+catalogue, availability, pricing or booking features are included.
+
+Vendor/service changes and append-only audit events commit together. Audit records
+contain the actor/resource UUIDs, action, changed field names and UTC timestamp,
+not contact values or payload snapshots. These UUIDs remain historical references.
+Existing identity events remain separate and unchanged. The local database owner
+can alter triggers; these development credentials are not production credentials.
+
+Apply migration `0002` explicitly using the existing Alembic instructions. Ops users
+are supplied by test fixtures only; no automatic privileged account or login bypass
+is added. Manual authentication still awaits live email delivery.
+
+Step 2: Done when: ops can create a vendor and a service, customers cannot.
