@@ -1,15 +1,13 @@
-.planner { max-width: 800px; margin: 0 auto; padding: 12px 0 24px; }
-.intro { text-align: center; margin-bottom: 32px; }
-.orb { position: relative; width: 76px; height: 76px; margin: 0 auto 22px; border-radius: 50%; background: radial-gradient(circle at 30% 20%, #ffffffde, transparent 42%), conic-gradient(from 45deg, #64dcf5, #9386ff, #e5a4f1, #f5c5b8, #87e5e1, #64dcf5); box-shadow: inset 0 0 15px #ffffffb0, 0 6px 28px #8975f32b; }
-.orb span { position: absolute; inset: 17px; border: 1px solid #ffffff90; border-radius: 45% 55% 60% 40%; transform: rotate(-25deg); box-shadow: inset 0 0 14px #ffffffa0; }
+.planner { min-width: 0; padding: 0 0 24px; }
+.intro { text-align: center; margin-bottom: 28px; }
 .eyebrow { font-size: 9px; letter-spacing: 2px; font-weight: 650; color: var(--muted); }
 .intro h1 { font-size: clamp(40px, 6vw, 64px); font-weight: 500; letter-spacing: -.045em; margin: 16px 0; line-height: 1.06; text-wrap: balance; }
 .intro h1 em { font-style: normal; color: var(--ink); opacity: .75; }
 .intro > p:last-child { color: var(--muted); font-size: 15px; margin-bottom: 0; text-wrap: balance; }
-.chat { position: relative; border: 1px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(130deg, #77c9e2, #ad9ee1 45%, #e3a5c9 75%, #a9cda8) border-box; border-radius: 28px; box-shadow: 0 12px 44px #77629c12; overflow: hidden; }
+.chat { position: relative; border: 1px solid var(--line); background: var(--surface); border-radius: 24px; overflow: hidden; }
 .chatHeader { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 85%, transparent); backdrop-filter: blur(12px); }
 .identity { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
-.avatar { width: 32px; height: 32px; border-radius: 50%; background: radial-gradient(circle at 30% 20%, #ffffffaa, transparent 50%), conic-gradient(#78d8e8, #a993e6, #e9b5dc, #78d8e8); box-shadow: inset 0 0 7px #ffffff70; }
+.avatar { position: relative; width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
 .identityHint { display: block; color: var(--muted); font-size: 10px; font-weight: 400; margin-top: 2px; }
 .demoBadge { font-size: 10px; color: var(--muted); border: 1px solid var(--line); border-radius: 20px; padding: 5px 10px; white-space: nowrap; }
 .thread { max-height: min(460px, 50dvh); min-height: 180px; overflow-y: auto; overscroll-behavior: contain; padding: 28px 24px; display: flex; flex-direction: column; gap: 24px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
@@ -19,8 +17,6 @@
 .speaker { display: block; font-size: 10px; font-weight: 650; color: var(--muted); margin-bottom: 7px; }
 .assistant p, .user p { margin: 0; font-size: 15px; line-height: 1.75; white-space: pre-wrap; }
 .composeArea { padding: 0 20px 20px; }
-.currentQuestion { margin: 0 4px 12px; font-size: 13px; line-height: 1.6; }
-.currentQuestion span { display: block; color: var(--muted); font-size: 8px; letter-spacing: 1.2px; margin-bottom: 3px; }
 .composer { padding: 12px 14px 10px; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; }
 .composer:focus-within { outline: 2px solid var(--focus); outline-offset: 3px; }
 .composer textarea { display: block; width: 100%; min-height: 54px; max-height: 180px; resize: vertical; border: none; background: transparent; color: var(--ink); font-size: 16px; line-height: 1.6; padding: 2px; border-radius: 2px; }
@@ -32,12 +28,18 @@
 .send:disabled { opacity: 1; color: var(--muted); background: var(--soft); }
 .error { color: var(--error); font-size: 12px; margin: 8px 4px; }
 .error:empty { display: none; }
-.starters { margin-top: 18px; }
-.starters > p { font-size: 11px; line-height: 1.6; color: var(--muted); margin: 0 4px 10px; }
-.starters > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.suggestionTrigger { min-height: 44px; margin-top: 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 24px; background: var(--paper); color: var(--ink); font-size: 12px; }
+.suggestionTrigger:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.starters::backdrop { background: #0002; }
+.starters { width: min(420px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); overflow-y: auto; padding: 16px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); color: var(--ink); box-shadow: 0 16px 64px #0003; }
+.starters > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.starters > header strong { font-size: 15px; }
+.starters > p { font-size: 12px; line-height: 1.6; color: var(--muted); margin: 0 4px 10px; }
+.starters > div { display: grid; gap: 8px; }
 .starters button { display: flex; align-items: center; gap: 9px; min-height: 48px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); color: var(--ink); font-size: 12px; line-height: 1.5; text-align: left; }
 .starters button span:nth-child(2) { flex: 1; overflow-wrap: anywhere; }
 .starters button:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.starters > header button { justify-content: center; min-width: 44px; min-height: 44px; padding: 0; border: none; background: transparent; font-size: 24px; }
 @media (hover: hover) and (pointer: fine) { .starters button:hover { background: var(--soft); } }
 .disclosure { color: var(--muted); font-size: 11px; line-height: 1.7; text-align: center; margin: 16px 0 6px; text-wrap: balance; }
 .finished { padding: 4px 24px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
@@ -66,11 +68,8 @@
 @media (prefers-reduced-transparency: reduce) { .chatHeader { background: var(--paper); backdrop-filter: none; } }
 @media (prefers-contrast: more) { .chat { border-color: var(--ink); background: var(--surface); } .chatHeader { background: var(--paper); backdrop-filter: none; } }
 @media (max-width: 600px) {
-  .starters > div { grid-template-columns: 1fr; }
   .planner { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .intro { margin-bottom: 24px; }
-  .orb { width: 60px; height: 60px; margin-bottom: 20px; }
-  .orb span { inset: 14px; }
   .intro h1 { font-size: 42px; }
   .intro > p:last-child { font-size: 13px; }
   .chat { border-radius: 22px; }
@@ -88,4 +87,24 @@
   .teaserCard strong { font-size: 13px; letter-spacing: -.2px; }
   .teaserCard small { font-size: 8px; }
   .teaserHeading h2 { font-size: 17px; }
+}
+
+.workspace { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 32px; align-items: start; }
+.history { position: sticky; top: 140px; }
+.introPhoto { position: relative; height: 170px; border-radius: 18px; overflow: hidden; margin-bottom: 28px; }
+.intro h1 { font-size: clamp(32px, 4vw, 46px); }
+.mobileToolbar { display: none; }
+.notice { background: var(--soft); border: 1px solid var(--line); padding: 12px 16px; border-radius: 12px; font-size: 12px; line-height: 1.6; }
+.thinking { font-size: 12px; color: var(--muted); }
+.conversationActions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; font-size: 10px; color: var(--muted); }
+.textButton { min-height: 44px; background: none; border: 0; border-radius: 7px; padding: 8px; color: var(--muted); font-size: 11px; text-decoration: underline; text-underline-offset: 4px; }
+.textButton:disabled { text-decoration: none; opacity: .55; }
+@media (max-width: 850px) {
+  .workspace { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .history { display: none; position: static; }
+  .historyOpen { display: block; }
+  .mobileToolbar { display: flex; justify-content: space-between; gap: 12px; }
+  .mobileToolbar button { min-height: 44px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--ink); padding: 10px 14px; font-size: 12px; }
+  .introPhoto { height: 135px; margin-bottom: 24px; }
+  .intro h1 { font-size: 36px; }
 }

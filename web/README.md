@@ -34,7 +34,8 @@ in the app footer. Activity photos are representative, not evidence of an event 
 All planning prompts now use the chat composer, including the existing
 `/questions/[field]` links used to edit a brief. Three optional starter ideas
 (tonight, a relaxed date, and a forgotten anniversary) add editable text to the
-composer without sending it. Follow-up questions use free text, with no
+composer without sending it. Open them with “Need an idea?”; the pop-up closes
+after selection, on Escape, or when clicking outside. Follow-up questions use free text, with no
 multiple-choice answers. Dates, times, areas and other preferences
 are preserved in the user's own words; budget validation still uses integer paise.
 Enter sends, Shift+Enter adds a line, and IME composition does not submit.
@@ -87,6 +88,9 @@ detail/checkout actions as well as the list. ₹500 returns no available sample
 because existing synthetic totals start at ₹1,800. The UI does not fabricate
 cheaper prices, scale a two-person quote, or claim to generate live packages.
 Real budget-based packages still need backend integration and verified inventory pricing.
+Editing the budget of a completed brief returns directly to refreshed options,
+preserving the other answers. Invalid budget input stays in the editor; an
+incomplete brief still asks the remaining questions.
 
 ## Curved Discover collection
 

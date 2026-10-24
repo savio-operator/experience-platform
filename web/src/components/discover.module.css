@@ -33,7 +33,7 @@
 .cardArea { color: var(--muted); font-size: 11px; margin-bottom: 0; }
 .cardArea span { color: var(--muted); }
 .chatInvite { display: flex; align-items: center; gap: 23px; padding: 30px; background: var(--soft); border: 1px solid var(--line); border-radius: 16px; margin-top: 48px; }
-.chatMark { flex: 0 0 48px; height: 48px; display: grid; place-items: center; background: var(--green); color: #f8f7f2; font-size: 32px; border-radius: 50%; padding-bottom: 6px; }
+.chatMark { position: relative; flex: 0 0 48px; height: 48px; border-radius: 12px; overflow: hidden; }
 .chatInvite > div { flex: 1; }
 .chatInvite h2 { font-size: 24px; letter-spacing: -.6px; font-weight: 500; margin-bottom: 9px; }
 .chatInvite p { font-size: 12px; color: var(--muted); margin: 0; }
