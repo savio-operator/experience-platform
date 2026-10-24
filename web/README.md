@@ -85,3 +85,22 @@ detail/checkout actions as well as the list. ₹500 returns no available sample
 because existing synthetic totals start at ₹1,800. The UI does not fabricate
 cheaper prices, scale a two-person quote, or claim to generate live packages.
 Real budget-based packages still need backend integration and verified inventory pricing.
+
+## Curved Discover collection
+
+The supplied TiltedGridHero is adapted in `src/components/ui/tilted-grid-hero.tsx`,
+with a colocated CSS Module. This keeps reusable visual components separate from
+the Discover screen and preserves the reference import structure. TypeScript is
+already configured; Tailwind/shadcn setup is unnecessary for this CSS Modules
+adaptation. No additional packages or external image hosts are introduced.
+
+The decorative photo band uses the existing credited local images, curved into
+16 facets per tile. Transform-based motion advances one tile every four seconds,
+pauses off-screen and has a keyboard-accessible pause/resume control. Reduced
+motion uses explicit static tile positions so the app-wide animation override
+does not collapse the images onto each other. The accessible event links remain
+in the responsive collage below, with the same search, filters and disclosures.
+
+Check the curved image alignment, pause/resume, reduced-motion still layout and
+light/dark mobile layouts in a browser before release. Browser automation was
+unavailable during implementation.

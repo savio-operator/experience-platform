@@ -5,8 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDemo } from "./DemoProvider";
 import Photo from "./Photo";
+import { TiltedGridHero } from "./ui/tilted-grid-hero";
 import { discoveryEvents, formatTime, photos } from "@/lib/fixtures";
 import s from "./discover.module.css";
+
+const heroImages = discoveryEvents.map(event => ({ src: photos[event.photo].src, alt: photos[event.photo].alt }));
 
 const categories = ["All", "Outdoors", "Live music", "Workshops", "Food", "Art", "Wellness"];
 const areas = ["All Kochi", "Fort Kochi", "Panampilly Nagar", "Marine Drive", "Kakkanad", "Edappally"];
@@ -56,12 +59,12 @@ export default function Discover({ eventId }: { eventId?: string }) {
         </section>
       </div>
     </> : <section className={s.state}><h1>This idea isn’t here.</h1><p>Return to Discover to explore the sample collection.</p><Link className={s.primary} href="/discover">Explore Kochi →</Link></section> : <>
-      <section className={s.hero}>
-        <Photo id="water" sizes="(max-width: 1200px) 100vw, 1144px" eager />
-        <div className={s.heroShade} />
-        <div className={s.heroContent}><span className={s.heroLabel}>THE KOCHI EDIT</span><h1>A good day is<br />closer than you think.</h1><p>Live music, little adventures, and things worth<br className={s.desktopBreak} /> putting your phone away for.</p><a href="#city-listings" className={s.heroButton}>Find your kind of plan <span aria-hidden="true">↓</span></a></div>
-        <span className={s.heroLocation}>FORT KOCHI, KERALA <span aria-hidden="true">↗</span></span>
-      </section>
+      <TiltedGridHero images={heroImages} className={s.hero} speed={4} curve={75} axis={54} tileHeight={26} fade={12}>
+        <div className={s.heroContent}>
+          <div className={s.heroHeading}><span className={s.heroLabel}>THE KOCHI EDIT</span><h1>A city of possibilities.<br /><em>Find your little elsewhere.</em></h1></div>
+          <div className={s.heroFooter}><p>Good food, fresh perspectives, a little sea air.<br />A few frames to spark your next plan.</p><a href="#city-listings" className={s.heroButton}>Explore the collection <span aria-hidden="true">↓</span></a></div>
+        </div>
+      </TiltedGridHero>
       <div className={s.introduction} id="city-listings"><div><p className={s.kicker}>STEP OUT. TUNE IN.</p><h2>Find your kind of Kochi.</h2></div><p>A starting point for your next plan.<br />See something you like? Take it to Chat.</p></div>
       <p className={s.demoNote}><span>DEMO COLLECTION</span>Sample events for 24–25 October 2026. Schedules and availability are unverified; photos are representative.</p>
       <div className={s.filters}>
