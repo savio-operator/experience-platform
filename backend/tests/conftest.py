@@ -35,7 +35,8 @@ def db(engine):
     with engine.begin() as connection:
         connection.execute(
             text(
-                "TRUNCATE bookings, booking_components, sessions, user_roles, "
+                "TRUNCATE payments, payment_events, bookings, booking_components, "
+                "sessions, user_roles, "
                 "consents, customers, users, "
                 "otp_challenges, auth_limits, slot_offers, holds, "
                 "inventory_slots, services, vendors"
@@ -163,3 +164,20 @@ def setup(ops):
         return slot, offer
 
     return client, actor, search, add
+
+
+@pytest.fixture
+def candidate(setup):
+    client, actor, search, add = setup
+    slot, offer = add(100, capacity=1)
+    body = dict(
+        slot_id=slot["id"],
+        idempotency_key=str(uuid4()),
+        kind="date",
+        quantity=1,
+        budget_paise=1000,
+        expected_total_paise=100,
+        expires_at=(datetime.now(UTC) + timedelta(minutes=10)).isoformat(),
+        requirements=[],
+    )
+    return client, actor, slot, offer, body

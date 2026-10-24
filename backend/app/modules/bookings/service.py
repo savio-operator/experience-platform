@@ -31,7 +31,6 @@ def public(row, item, now):
         "component_state": "EXPIRED" if expired else item["state"],
         "total_paise": row["total_paise"],
         "expires_at": row["expires_at"],
-        "payment_status": "NOT_INTEGRATED",
     }
 
 

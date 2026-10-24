@@ -26,7 +26,7 @@ audit_events = Table(
     ),
     CheckConstraint(
         "resource_type IN ('vendor', 'service', 'inventory_slot', 'hold', "
-        "'booking', 'component')",
+        "'booking', 'component', 'payment')",
         name="audit_resource_type",
     ),
     CheckConstraint(

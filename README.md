@@ -357,8 +357,8 @@ to FAILED/REJECTED, releasing capacity. Confirmation converts the hold into dura
 CONFIRMED capacity; it cannot expire into sellable stock or be released through the
 generic hold endpoint. Inventory remains capacity-based (HELD while units are
 reserved), not globally confirmed for an entire multi-unit slot. Bookings and
-components are separate from inventory state. Payment status is NOT_INTEGRATED:
-confirmation records vendor acceptance only, never payment, fulfillment or a refund.
+components are separate from inventory state. Confirmation records vendor acceptance only, never payment, fulfillment or a refund.
+Payment state is exposed separately through the Step 8 payment resource.
 
 Pending bookings past their deadline project FAILED/EXPIRED on reads. A late
 confirmation persists failure and returns 409. Run one expiry batch (up to 100) from
@@ -378,3 +378,59 @@ preserved on downgrade. No payment, notification, live supplier or cloud integra
 is enabled. Tests use synthetic evidence and disposable PostgreSQL only.
 
 Step 7: Done when: "confirmed" is unreachable without vendor confirmation.
+
+
+## Step 8: payments only (gateway disabled)
+
+The user explicitly excluded refunds, vouchers and guarantee implementation from
+this step. Migration `0006` adds `payments` and minimal webhook deduplication records.
+No refund operation or automatic financial compensation is implemented.
+
+`POST /payments` requires authentication and `booking_id`, `idempotency_key` UUIDs.
+Only the booking owner may initiate. Amount/currency come from the server booking
+snapshot, not the request. One payment record per booking prevents parallel attempts
+from allocating additional payment identities. Same-key retries reuse the record;
+a changed key for that booking conflicts. Failed/expired bookings cannot initiate a
+new payment. Failed attempts do not automatically create another charge.
+
+The record is committed before calling the gateway, using its UUID as the stable
+merchant idempotency identity. Gateway calls run outside database transactions with
+a five-second deadline. Timeouts/invalid results leave a recoverable PENDING record
+with GATEWAY_UNKNOWN rather than asserting failure or retrying a new charge. A future
+provider adapter must support this idempotency/lookup contract before activation.
+
+`GET /payments/{id}` permits owner/ops access. `POST /ops/payments/{id}/reconcile`
+accepts `{}` and is ops-only. The job `python -m app.jobs.reconcile_payments` processes
+up to 100 records, rotating even unchanged results; scheduling remains external.
+The runtime gateway is disabled and the job refuses to run without an approved
+adapter. No SDK, API key lookup, environment activation switch or live calls exist.
+
+`POST /payments/webhook` accepts at most 64 KiB of raw JSON. The injected gateway
+must verify its signature against the exact bytes before returning a normalized
+event. Invalid signatures return 401; malformed events, amount/currency mismatches,
+unknown payments and event-key conflicts cannot change payment state. Event
+recording, state updates and audits commit atomically. Raw webhook bodies, signatures
+and credentials are not stored or logged. Deterministic tests implement an explicitly
+synthetic HMAC/timestamp scheme; it is not any provider's protocol. Actual signature
+rules and event mappings require provider-specific implementation after approval.
+
+Normalized states are PENDING, FAILED, SUCCEEDED. Recorded success is sticky: delayed
+pending/failure events never erase it; late verified success can correct an earlier
+failure observation. This is conservative internal accounting, not an assumption
+about a vendor's event ordering. Payments never confirm bookings or release holds.
+Booking responses no longer contain the obsolete NOT_INTEGRATED payment placeholder;
+use the separate payment resource for payment truth.
+
+If a paid booking fails/expires, reads expose BOOKING_FAILED immediately and
+reconciliation persists it as an audited manual-review requirement. Payment remains
+SUCCEEDED; no refund is implied or initiated. A timeout after an actual charge is
+recoverable by lookup under the same merchant identity. If a provider lookup has no
+record or is unavailable, retain GATEWAY_UNKNOWN for later reconciliation; do not
+invent a failure or initiate a replacement charge. Provider selection and explicit
+activation approval remain required. Tests use synthetic data only.
+
+Payment initiation is limited to 15/user/minute and 30/IP/minute; webhook intake to
+60/IP/minute. Existing authentication and JSON/origin protections remain intact.
+Provider-specific delivery requirements must be reviewed before any live activation.
+
+Step 8: Done when: duplicate webhooks and payment-succeeds-booking-fails cases are handled by tests.

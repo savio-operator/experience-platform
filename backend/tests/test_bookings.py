@@ -15,23 +15,6 @@ from app.modules.identity.models import users
 from app.modules.inventory.models import holds, inventory_slots
 
 
-@pytest.fixture
-def candidate(setup):
-    client, actor, search, add = setup
-    slot, offer = add(100, capacity=1)
-    body = dict(
-        slot_id=slot["id"],
-        idempotency_key=str(uuid4()),
-        kind="date",
-        quantity=1,
-        budget_paise=1000,
-        expected_total_paise=100,
-        expires_at=(datetime.now(UTC) + timedelta(minutes=10)).isoformat(),
-        requirements=[],
-    )
-    return client, actor, slot, offer, body
-
-
 def create(candidate):
     client, _, _, _, body = candidate
     response = client.post("/bookings", json=body)
@@ -49,7 +32,7 @@ def test_confirmation_requires_evidence_and_is_idempotent(candidate, db):
     response = client.post(path, json=evidence)
     assert response.status_code == 200, response.text
     assert response.json()["state"] == response.json()["component_state"] == "CONFIRMED"
-    assert response.json()["payment_status"] == "NOT_INTEGRATED"
+    assert "payment_status" not in response.json()
     assert client.post(path, json=evidence).status_code == 200
     assert (
         client.post(path, json={"vendor_confirmation_id": str(uuid4())}).status_code

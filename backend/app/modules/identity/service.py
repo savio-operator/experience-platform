@@ -56,6 +56,10 @@ def throttle(engine, key, operation, ip, email=None):
             (f"send-minute:{email}", 1, 60),
             (f"send-hour:{email}", 5, 3600),
         ]
+    elif operation == "payment":
+        limits = [(f"payment-ip:{ip}", 30, 60), (f"payment-user:{email}", 15, 60)]
+    elif operation == "payment_webhook":
+        limits = [(f"payment-webhook-ip:{ip}", 60, 60)]
     elif operation == "booking":
         limits = [(f"booking-ip:{ip}", 30, 60), (f"booking-user:{email}", 15, 60)]
     elif operation == "options":

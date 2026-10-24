@@ -37,7 +37,7 @@ Booking and component states, ops confirmation flow, expiry jobs, audit trail.
 Done when: "confirmed" is unreachable without vendor confirmation.
 
 ## Step 8: Payments, refunds, guarantee
-Gateway test mode, webhooks with signature checks, idempotency, refunds, voucher guarantee, reconciliation job.
+Approved Step 8 scope: payment records/state, disabled gateway abstraction, signature-verified webhook boundary, idempotency and reconciliation. Refunds, vouchers and guarantee implementation are explicitly deferred by the user; no live payments until provider approval.
 Done when: duplicate webhooks and payment-succeeds-booking-fails cases are handled by tests.
 
 ## Step 9: Notifications

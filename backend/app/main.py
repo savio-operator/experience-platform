@@ -12,6 +12,7 @@ from app.api.bookings import router as bookings_router
 from app.api.intents import router as intents_router
 from app.api.inventory import router as inventory_router
 from app.api.ops import router as ops_router
+from app.api.payments import router as payments_router
 from app.api.planning import router as planning_router
 from app.core.config import load_settings
 from app.core.db import make_engine
@@ -40,6 +41,7 @@ def create_app():
     app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
     app.include_router(router)
     app.include_router(bookings_router)
+    app.include_router(payments_router)
     app.include_router(ops_router)
     app.include_router(inventory_router)
     app.include_router(intents_router)
