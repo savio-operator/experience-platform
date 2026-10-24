@@ -9,6 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.auth import router
 from app.api.bookings import router as bookings_router
+from app.api.cases import router as cases_router
 from app.api.intents import router as intents_router
 from app.api.inventory import router as inventory_router
 from app.api.notifications import router as notifications_router
@@ -45,6 +46,7 @@ def create_app():
     app.include_router(payments_router)
     app.include_router(notifications_router)
     app.include_router(ops_router)
+    app.include_router(cases_router)
     app.include_router(inventory_router)
     app.include_router(intents_router)
     app.include_router(planning_router)

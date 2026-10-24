@@ -9,6 +9,7 @@ from app.modules.customers import models as customer_models  # noqa: F401
 from app.modules.identity import models as identity_models  # noqa: F401
 from app.modules.inventory import models as inventory_models  # noqa: F401
 from app.modules.notifications import models as notification_models  # noqa: F401
+from app.modules.ops import models as ops_models  # noqa: F401
 from app.modules.payments import models as payment_models  # noqa: F401
 from app.modules.planning import models as planning_models  # noqa: F401
 from app.modules.vendors import models as vendor_models  # noqa: F401

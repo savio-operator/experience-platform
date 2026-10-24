@@ -35,7 +35,8 @@ def db(engine):
     with engine.begin() as connection:
         connection.execute(
             text(
-                "TRUNCATE notifications, payments, payment_events, bookings, "
+                "TRUNCATE case_actions, cases, notifications, "
+                "payments, payment_events, bookings, "
                 "booking_components, "
                 "sessions, user_roles, "
                 "consents, customers, users, "

@@ -480,3 +480,50 @@ records). It currently exits safely with delivery disabled. No scheduler is inst
 No historical backfill or unrelated booking/payment features are introduced.
 
 Step 9: Done when: messages only send after verified state.
+
+## Step 10: ops queues and cases
+
+Apply migration `0008` explicitly. All new APIs require `ops_admin` and retain the
+existing session rate limit and mutation protections. No frontend or delivery service
+is added. `GET /ops/queues/{kind}` supports `pending-confirmations`, `failed-bookings`,
+`payment-review`, `failed-notifications`, and `escalations`. Lists use `limit` (1–100,
+default 50) and `after` (last UUID) for bounded pagination. They reflect source states,
+not case closure; failed booking history and later financial issues remain visible.
+Expired pending bookings appear as failed even before the expiry job persists them.
+
+`POST /ops/cases` accepts `booking_id`. One durable case per booking deduplicates
+concurrent creation; reopen it for subsequent issues. `GET /ops/cases/{id}` includes
+current payment truth, financial-follow-up flag and failed notification IDs.
+`GET /ops/cases/{id}/actions` provides the bounded, paginated action history.
+`POST /ops/cases/{id}/actions` requires `idempotency_key`, current integer `version`,
+and an action: `assign`, `record`, `escalate`, `resolve`, or `reopen`. Assignment needs
+an `assigned_to` UUID belonging to an ops administrator. Other actions require a
+nonblank `note` (at most 1,000 characters) and `evidence_id` UUID referencing retained
+manual-action evidence. Do not put credentials or unnecessary personal data in notes.
+Evidence is an ops attestation/reference, not automated verification or a financial
+provider receipt. Action notes and evidence values are never logged in audit events.
+
+Concurrent stale updates return 409. Identical retries return the current case without
+repeating effects; changed payloads or actors cannot reuse an action key. Actions,
+case updates and append-only audit events commit together. Stored action records reject
+UPDATE/DELETE. Inventory-slot locking follows existing booking/payment lock order.
+
+For a failed booking: use the existing rejection or expiry transition, create its
+case, assign an ops administrator, record manual actions/evidence, then resolve.
+Resolution requires a terminal booking, an assignee, evidence, no unresolved payment
+review and no FAILED notifications. Pending/unknown payments and successful payments
+on failed bookings block closure. Ops may record and escalate such work without
+claiming it finished. Exhausted notification delivery also stays open for follow-up;
+no retry-reset or manual-delivery-success override is introduced. Pending disabled
+notifications stay independently pending: operational case closure does not mean
+customer delivery occurred.
+
+Case resolution never updates booking, payment or notification outcomes. FAILED
+payment means a recorded failure observation, not a refund. Late verified payment
+success remains visible in payment review even if a case was previously resolved;
+ops can reopen the case. Financial settlement/refunds, voucher policy and live
+providers remain deferred. No completed financial remedy is claimed.
+
+Step 10: Done when: ops can resolve a failed booking end to end.
+This is demonstrated for failures without unresolved financial/delivery work; paid
+failures remain explicitly unresolved pending an approved financial resolution flow.

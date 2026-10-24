@@ -45,7 +45,7 @@ Confirmation, reminders, change and failure notices via WhatsApp/SMS/email provi
 Done when: messages only send after verified state.
 
 ## Step 10: Ops dashboard and cases
-In-progress bookings, pending confirmations, failures, refunds, escalation queue.
+Approved Step 10 scope: ops-only booking, payment-review, failed-notification and escalation queues; durable assigned cases with evidenced actions and atomic audits. Refunds and vouchers remain deferred. Case closure never changes payment state or represents money returned.
 Done when: ops can resolve a failed booking end to end.
 
 ## Step 11: Hardening
